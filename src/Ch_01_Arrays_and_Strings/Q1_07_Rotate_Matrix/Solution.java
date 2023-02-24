@@ -32,10 +32,7 @@ public class Solution {
                 matrix[i][j] = randomIntInRange(min, max);
             }
         }
-        int[][] ints = {
-                {7, 2, 0}, {2, 2, 5}, {7, 5, 9}
-        };
-        return ints;
+        return matrix;
     }
 
     public static int randomIntInRange(int min, int max) {
