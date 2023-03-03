@@ -7,10 +7,46 @@ public class Solution2 {
     private static LinkedListNode addLists(LinkedListNode l1, LinkedListNode l2) {
         int len1 = length(l1);
         int len2 = length(l2);
-        System.out.println(len1);
-        System.out.println(len2);
-        return null;
+        if (len1> len2){
+            l2 = padList(l2, len1 - len2);
+        }
+        else {
+            l1 = padList(l1, len2 - len1);
+        }
+        PartialSum sum = addListsHelper(l1, l2);
+        if (sum.carry == 0) {
+            return sum.sum;
+        } else {
+            return insertBefore(sum.sum, sum.carry);
+        }
+    }
 
+    private static PartialSum addListsHelper(LinkedListNode l1, LinkedListNode l2) {
+        if (l2 ==null && l1 == null){
+            return new PartialSum();
+        }
+        PartialSum sum = addListsHelper(l1.next, l2.next);
+        int val = l1.data + l2.data + sum.carry;
+        LinkedListNode fullResult = insertBefore(sum.sum, val % 10);
+        sum.sum = fullResult;
+        sum.carry = val/10;
+        return sum;
+    }
+
+    private static LinkedListNode padList(LinkedListNode l2, int length) {
+        LinkedListNode temp = l2;
+        for (int i = 0; i < length; i++) {
+            temp = insertBefore(l2, 0);
+        }
+        return temp;
+    }
+
+    private static LinkedListNode insertBefore(LinkedListNode l2, int data) {
+        LinkedListNode node = new LinkedListNode(data);
+        if (l2 != null) {
+            node.next = l2;
+        }
+        return node;
     }
 
     private static int length(LinkedListNode node) {
@@ -50,4 +86,8 @@ public class Solution2 {
         System.out.print(l1 + " + " + l2 + " = " + l3 + "\n");
         System.out.print(l1 + " + " + l2 + " = " + (l1 + l2));
     }
+}
+class PartialSum {
+    public LinkedListNode sum = null;
+    public int carry = 0;
 }

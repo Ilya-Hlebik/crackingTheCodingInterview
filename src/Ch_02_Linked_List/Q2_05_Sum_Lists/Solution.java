@@ -9,41 +9,32 @@ public class Solution {
         LinkedListNode tempNode = linkedListNode;
         int temp = 0;
 
-        while (l1 !=null || l2!=null){
+        while (l1 != null || l2 != null) {
             int data = 0;
             if (l1 != null) {
-                data =  l1.data;
+                data = l1.data;
             }
             int data1 = 0;
-            if (l2 != null){
+            if (l2 != null) {
                 data1 = l2.data;
             }
             int sum = data + data1 + temp;
-            temp = 0;
-            if (sum> 9){
-                tempNode.data = sum %10;
-                ++temp;
-            }
-            else {
-                tempNode.data = sum + temp;
-                temp = 0;
-            }
-            if (l1 != null){
+            tempNode.data = sum % 10;
+            temp = sum / 10;
+            if (l1 != null) {
                 l1 = l1.next;
             }
-            if (l2 != null){
+            if (l2 != null) {
                 l2 = l2.next;
             }
 
-            if ((l1 == null && l2 == null) && temp !=0){
+            if ((l1 == null && l2 == null) && temp != 0) {
                 tempNode.next = new LinkedListNode();
                 tempNode = tempNode.next;
                 tempNode.data = temp;
-            }
-            else if (l1 == null && l2 == null){
+            } else if (l1 == null && l2 == null) {
                 tempNode = null;
-            }
-            else {
+            } else {
                 tempNode.next = new LinkedListNode();
                 tempNode = tempNode.next;
             }
@@ -52,24 +43,26 @@ public class Solution {
     }
 
 
-  /*  public static int linkedListToInt(LinkedListNode node) {
+    /*  public static int linkedListToInt(LinkedListNode node) {
 
-    }*/
-  public static int linkedListToInt(LinkedListNode node) {
-      int value = 0;
-      if (node.next != null) {
-          value = 10 * linkedListToInt(node.next);
-      }
-      return value + node.data;
-  }
+      }*/
+    public static int linkedListToInt(LinkedListNode node) {
+        int value = 0;
+        if (node.next != null) {
+            value = 10 * linkedListToInt(node.next);
+        }
+        return value + node.data;
+    }
+
     public static void main(String[] args) {
-        LinkedListNode lA1 = new LinkedListNode(9, null, null);
+        LinkedListNode lA1 = new LinkedListNode(8, null, null);
         LinkedListNode lA2 = new LinkedListNode(9, null, lA1);
         LinkedListNode lA3 = new LinkedListNode(9, null, lA2);
+        LinkedListNode lA4 = new LinkedListNode(9, null, lA3);
 
         LinkedListNode lB1 = new LinkedListNode(1, null, null);
-        LinkedListNode lB2 = new LinkedListNode(0, null, lB1);
-        LinkedListNode lB3 = new LinkedListNode(0, null, lB2);
+        LinkedListNode lB2 = new LinkedListNode(2, null, lB1);
+        LinkedListNode lB3 = new LinkedListNode(3, null, lB2);
 
         LinkedListNode list3 = addLists(lA1, lB1);
 
