@@ -9,8 +9,8 @@ public class Solution {
         if (list1 == null || list2 == null) {
             return null;
         }
-        Pointer p1 = length(list1);
-        Pointer p2 = length(list2);
+        Pointer p1 = getTailAndSize(list1);
+        Pointer p2 = getTailAndSize(list2);
         if (p1.tail != p2.tail) {
             return null;
         }
@@ -36,7 +36,7 @@ public class Solution {
         return list1;
     }
 
-    private static Pointer length(LinkedListNode list1) {
+    private static Pointer getTailAndSize(LinkedListNode list1) {
         LinkedListNode current = list1;
         int count = 1;
         while (current.next != null) {
