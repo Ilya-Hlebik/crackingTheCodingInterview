@@ -7,7 +7,7 @@ public class Solution {
         MyStack myStack = new MyStack();
         myStack.push(1);
         myStack.push(2);
-        myStack.push(-3);
+        myStack.push(-1);
         myStack.push(3);
         myStack.push(-1);
         myStack.push(0);
@@ -50,22 +50,16 @@ class MyStack {
     }
 
     public void push(int item) {
+        int min = Math.min(item, min());
         StackNode t = new StackNode(item);
-        if (top !=null && item < top.min){
-            t.min = item;
-        }
-        else if (top !=null){
-            t.min = top.min;
-        }
-        else {
-            t.min = item;
-        }
-        t.next = top;
+        t.min = min;
         top = t;
 
     }
     public int min(){
-        if (top == null) throw new EmptyStackException();
+        if (top == null) {
+            return Integer.MAX_VALUE;
+        }
         return top.min;
     }
 
