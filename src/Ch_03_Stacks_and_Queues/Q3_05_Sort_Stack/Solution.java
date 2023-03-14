@@ -19,6 +19,36 @@ public class Solution {
     }
 
     private static void sort(Stack<Integer> s) {
-
+        Stack<Integer> tempStack = new Stack<>();
+        boolean wasUpdated = false;
+        while (true){
+            if (!s.isEmpty()){
+                if (!tempStack.isEmpty()){
+                    if (tempStack.peek() > s.peek()) {
+                        wasUpdated = true;
+                        int temp = tempStack.pop();
+                        tempStack.push(s.pop());
+                        tempStack.push(temp);
+                    }
+                    else tempStack.push(s.pop());
+                }
+                else {
+                    tempStack.push(s.pop());
+                }
+            }
+            else if (!wasUpdated){
+                break;
+            }
+            else {
+                while (!tempStack.isEmpty()){
+                    s.push(tempStack.pop());
+                }
+                wasUpdated = false;
+            }
+        }
+        while (!tempStack.isEmpty()){
+            s.push(tempStack.pop());
+        }
+        System.out.println();
     }
 }
