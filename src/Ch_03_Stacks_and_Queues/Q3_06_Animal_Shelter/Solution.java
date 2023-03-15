@@ -2,6 +2,7 @@ package Ch_03_Stacks_and_Queues.Q3_06_Animal_Shelter;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 
 public class Solution {
     public static void main(String[] args) {
@@ -31,41 +32,54 @@ public class Solution {
 }
 
 class AnimalQueue {
-    Queue<Animal> queue = new LinkedList<>();
+    Queue<Cat> cats = new LinkedList<>();
+    Queue<Dog> dogs = new LinkedList<>();
+    int count;
 
     public void enqueue(Animal animal) {
-        queue.add(animal);
+        count++;
+        animal.setCount(count);
+        if (animal instanceof Cat) {
+            cats.add((Cat) animal);
+        } else {
+            dogs.add((Dog) animal);
+        }
     }
 
     public Animal dequeueAny() {
-        return queue.poll();
+        if (cats.isEmpty()) {
+            return dequeueDog();
+        } else if (dogs.isEmpty()) {
+            return dequeueCat();
+        }
+        Cat cat = cats.peek();
+        Dog dog = dogs.peek();
+        if (cat.count > dog.count) {
+            return dequeueCat();
+        } else if (cat.count < dog.count) {
+            return dequeueDog();
+        }
+        int i = new Random().nextInt(2);
+        return i == 0 ? dequeueDog() : dequeueCat();
     }
 
     public Cat dequeueCat() {
-        Animal poll = queue.poll();
-        if (poll instanceof Cat) {
-            return (Cat) poll;
+        if (cats.isEmpty()) {
+            throw new RuntimeException("No Cats was present");
         }
-        Queue<Animal> tempQueue = new LinkedList<>();
-        tempQueue.add(poll);
-        while (!(queue.peek() instanceof Cat)) {
-            tempQueue.add(queue.poll());
-        }
-        Cat toReturn = (Cat) tempQueue.poll();
-        while (queue.isEmpty()) {
-            tempQueue.add(queue.poll());
-        }
-        queue = tempQueue;
-        return toReturn;
+        return cats.poll();
     }
 
     public Dog dequeueDog() {
-        return queue.poll();
+        if (dogs.isEmpty()) {
+            throw new RuntimeException("No Dogs was present");
+        }
+        return dogs.poll();
     }
 
 
     public int size() {
-        return queue.size();
+        return cats.size() + dogs.size();
     }
 }
 
@@ -83,7 +97,12 @@ class Dog extends Animal {
 }
 
 class Animal {
+    public int count;
     private String name;
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     public Animal(String name) {
         this.name = name;
