@@ -1,15 +1,18 @@
 package Ch_04_Trees_and_Graphs.Q4_01_Route_Between_Nodes;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Solution {
     public static void main(String a[]) {
         Graph g = createNewGraph();
         Node[] n = g.getNodes();
-        Node start = n[3];
+        Node start = n[0];
         Node end = n[5];
         System.out.println(search(g, start, end));
     }
 
-    private static Graph createNewGraph() {
+    static Graph createNewGraph() {
         Graph g = new Graph();
         Node[] temp = new Node[6];
 
@@ -33,6 +36,26 @@ public class Solution {
     }
 
     private static boolean search(Graph g, Node start, Node end) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(start);
+        while (!queue.isEmpty()){
+            Node poll = queue.poll();
+            if (poll.equals(end)){
+                return true;
+            }
+            if (poll.state!= State.Visited){
+                poll.state = State.Visiting;
+            }
+            for (Node node : poll.getAdjacent()) {
+                if (node.state != State.Visited){
+                    node.state = State.Visited;
+                    if (node.equals(end)){
+                        return true;
+                    }
+                    queue.add(node);
+                }
+            }
+        }
         return false;
     }
 
@@ -57,8 +80,7 @@ class Graph {
         if (count < vertices.length) {
             vertices[count] = node;
             count++;
-        }
-        else {
+        } else {
             System.out.print("Graph full");
         }
     }
@@ -68,6 +90,7 @@ class Node {
     private final String vertex;
     private final Node[] adjacent;
     int adjacentCount;
+    public State state;
 
     public Node(String vertex, int adjacentLength) {
         this.vertex = vertex;
@@ -76,11 +99,10 @@ class Node {
     }
 
     public void addAdjacent(Node node) {
-        if (adjacentCount < adjacent.length){
+        if (adjacentCount < adjacent.length) {
             adjacent[adjacentCount] = node;
             adjacentCount++;
-        }
-        else {
+        } else {
             System.out.print("No more adjacent can be added");
         }
     }
@@ -92,4 +114,8 @@ class Node {
     public Node[] getAdjacent() {
         return adjacent;
     }
+}
+
+enum State {
+    Unvisited, Visited, Visiting;
 }
