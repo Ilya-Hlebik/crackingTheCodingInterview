@@ -32,16 +32,16 @@ public class Solution {
         }
     }
 
-    public static int getHegth(TreeNode root) {
+    public static int getHeight(TreeNode root) {
         if (root == null) {
             return -1;
         }
-        return Math.max(getHegth(root.left), getHegth(root.right)) + 1;
+        return Math.max(getHeight(root.left), getHeight(root.right)) + 1;
     }
 
-    private static int getHeight(TreeNode node) {
+   /* private static int getHeight(TreeNode node) {
         int leftHeight = node != null && node.left != null ? getHeight(node.left) : 0;
         int rightHeight = node != null && node.right != null ? getHeight(node.right) : 0;
         return 1 + Math.max(leftHeight, rightHeight);
-    }
+    }*/
 }
