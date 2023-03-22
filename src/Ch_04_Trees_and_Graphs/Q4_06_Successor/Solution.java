@@ -2,7 +2,13 @@ package Ch_04_Trees_and_Graphs.Q4_06_Successor;
 
 import CtCILibrary.TreeNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Solution {
+    static TreeNode parrent;
+    static ArrayList<TreeNode> treeNodeList;
+
     public static void main(String[] args) {
         int[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         TreeNode root = TreeNode.createMinimalBST(array);
@@ -18,22 +24,35 @@ public class Solution {
     }
 
     private static TreeNode inorderSucc(TreeNode node) {
-        return inorderSucc(node, node);
+        if (parrent == null) {
+            parrent = getParrent(node);
+        }
+        if (treeNodeList == null) {
+            treeNodeList = new ArrayList<>();
+            inorderSucc(parrent, treeNodeList);
+        }
+        for (int i = 0; i < treeNodeList.size() - 1; i++) {
+            if (treeNodeList.get(i).equals(node)) {
+                return treeNodeList.get(i + 1);
+            }
+        }
+        return null;
+    }
 
+    private static TreeNode getParrent(TreeNode node) {
+        while (node != null && node.parent != null) {
+            node = node.parent;
+        }
+        return node;
     }
 
 
-    private static TreeNode inorderSucc(TreeNode node, TreeNode search) {
+    private static void inorderSucc(TreeNode node, List<TreeNode> treeNodeList) {
         if (node == null) {
-            return null;
+            return;
         }
-        inorderSucc(node.left, search);
-        if (node.parent != null && node.parent.equals(search)) {
-            return node;
-        }
-        else if (node.equals(search) && node.left == null && node.right == null && node.parent.data > node.data){
-            return node.parent;
-        }
-        return inorderSucc(node.right, search);
+        inorderSucc(node.left, treeNodeList);
+        treeNodeList.add(node);
+        inorderSucc(node.right, treeNodeList);
     }
 }
