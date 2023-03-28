@@ -8,8 +8,13 @@ public class Solution {
     public static void main(String[] args) {
         String[] projects = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
         String[][] dependencies = {
+                {"h", "a"},
+                {"h", "g"},
+                {"g", "a"},
                 {"a", "b"},
                 {"b", "c"},
+                {"h", "b"},
+                {"g", "b"},
                 {"a", "c"},
                 {"a", "c"},
                 {"d", "e"},
@@ -36,27 +41,27 @@ public class Solution {
 
     private static String[] buildOrderWrapper(String[] projects, String[][] dependencies) {
         List<String> result = new ArrayList<>();
+        Stack<String> toResolve = new Stack<>();
         for (String project : projects) {
-            Stack<String> toResolve = new Stack<>();
             if (result.contains(project)) {
                 continue;
             }
             for (int i = 0; i < dependencies.length; i++) {
-                if (dependencies[i][1].equals(project) && !result.contains(dependencies[i][0])) {
+                if (!result.contains(dependencies[i][0]) && (dependencies[i][1].equals(project) && !toResolve.contains(dependencies[i][0]))
+                        || (!toResolve.isEmpty() && toResolve.peek().equals(dependencies[i][1]))) {
                     toResolve.add(dependencies[i][0]);
                     i = -1;
                     continue;
-                }
-                if (!toResolve.isEmpty() && toResolve.peek().equals(dependencies[i][1]) && !result.contains(dependencies[i][0])) {
-                    toResolve.add(dependencies[i][0]);
-                    i = -1;
                 }
                 if (!toResolve.isEmpty() && toResolve.peek().equals(project)) {
                     return null;
                 }
             }
             while (!toResolve.isEmpty()) {
-                result.add(toResolve.pop());
+                String pop = toResolve.pop();
+                if (!result.contains(pop)) {
+                    result.add(pop);
+                }
             }
             result.add(project);
         }
