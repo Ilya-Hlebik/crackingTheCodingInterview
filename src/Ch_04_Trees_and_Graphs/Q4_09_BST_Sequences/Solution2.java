@@ -5,7 +5,7 @@ import CtCILibrary.TreeNode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class Splution2 {
+public class Solution2 {
 
     public static void weaveLists(LinkedList<Integer> first, LinkedList<Integer> second, ArrayList<LinkedList<Integer>> results, LinkedList<Integer> prefix) {
         /* One list is empty. Add the remainder to [a cloned] prefix and
@@ -63,7 +63,7 @@ public class Splution2 {
     }
 
     public static void main(String[] args) {
-        TreeNode node = new TreeNode(90);
+        TreeNode node = new TreeNode(100);
         int[] array = {100, 50, 20, 75, 150, 120, 170};
         for (int a : array) {
             node.insertInOrder(a);
