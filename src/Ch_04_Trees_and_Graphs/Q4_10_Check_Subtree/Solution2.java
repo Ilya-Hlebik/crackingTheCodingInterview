@@ -3,7 +3,35 @@ package Ch_04_Trees_and_Graphs.Q4_10_Check_Subtree;
 import CtCILibrary.AssortedMethods;
 import CtCILibrary.TreeNode;
 
-public class Solution {
+public class Solution2 {
+    public static boolean containsTree(TreeNode t1, TreeNode t2) {
+        if (t2 == null) {
+            return true; // The empty tree is a subtree of every tree.
+        }
+        return subTree(t1, t2);
+    }
+
+    private static boolean subTree(TreeNode t1, TreeNode t2) {
+        if (t1 == null) {
+            return false;
+        }
+        if (t1.data == t2.data && matchTree(t1, t2)) {
+            return true;
+        }
+        return subTree(t1.left, t2) || subTree(t1.right, t2);
+    }
+
+    public static boolean matchTree(TreeNode r1, TreeNode r2) {
+        if (r1 == null && r2 == null) {
+            return true;
+        } else if (r1 == null || r2 == null) {
+            return false;
+        } else if (r1.data != r2.data) {
+            return false;
+        } else {
+            return matchTree(r1.left, r2.left) && matchTree(r1.right, r2.right);
+        }
+    }
 
     public static void main(String[] args) {
         // t2 is a subtree of t1
@@ -29,23 +57,5 @@ public class Solution {
         } else {
             System.out.println("t4 is not a subtree of t3");
         }
-    }
-
-    private static boolean containsTree(TreeNode t1, TreeNode t2) {
-        StringBuilder strT1 = new StringBuilder();
-        preOrder(t1, strT1);
-        StringBuilder strT2 = new StringBuilder();
-        preOrder(t2, strT2);
-        return strT1.indexOf(strT2.toString()) != -1;
-    }
-
-    private static void preOrder(TreeNode node, StringBuilder stringBuilder) {
-        if (node == null) {
-            stringBuilder.append("node");
-            return;
-        }
-        stringBuilder.append(node.data);
-        preOrder(node.left, stringBuilder);
-        preOrder(node.right, stringBuilder);
     }
 }
