@@ -13,8 +13,8 @@ public class Solution {
             TreeNode root = AssortedMethods.randomBST(size, min, max);
 
             for (int targetSum = Math.min(-1, min * size - 10); targetSum <= Math.max(100, max * size + 10); targetSum++) {
-                int answerA = QuestionA.countPathsWithSum(root, targetSum);
-                int answerB = QuestionB.countPathsWithSum(root, targetSum);
+                int answerA = countPathsWithSum(root, targetSum);
+                int answerB = countPathsWithSum(root, targetSum);
                 if (answerA > 0 || answerB > 0) {
                     System.out.println(targetSum + ": " + answerA + ", " + answerB + " | " + (answerA == answerB));
                 }
@@ -24,5 +24,31 @@ public class Solution {
                 }
             }
         }
+    }
+
+    private static int countPathsWithSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return 0;
+        }
+        int pathFromRoot = countPathsWithSumFromNode(root, targetSum, 0);
+        int pathFromLeft = countPathsWithSum(root.left, targetSum);
+        int pathFromRight = countPathsWithSum(root.right, targetSum);
+
+        return pathFromLeft + pathFromRoot + pathFromRight;
+    }
+
+    private static int countPathsWithSumFromNode(TreeNode root, int targetSum, int currentSum) {
+        if (root == null) {
+            return 0;
+        }
+        currentSum += root.data;
+
+        int totalPath = 0;
+        if (currentSum == targetSum) {
+            totalPath++;
+        }
+        totalPath += countPathsWithSumFromNode(root.left, targetSum, currentSum);
+        totalPath += countPathsWithSumFromNode(root.right, targetSum, currentSum);
+        return totalPath;
     }
 }
