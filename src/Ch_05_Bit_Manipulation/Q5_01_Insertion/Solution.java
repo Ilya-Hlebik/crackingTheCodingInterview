@@ -16,8 +16,8 @@ public class Solution {
         System.out.println(AssortedMethods.toFullBinaryString(c).equals(AssortedMethods.toFullBinaryString(d)));
     }
 
-    private static int updateBits(int a, int b, int i, int j) {
-        return a & ((1 << i) - 1) | (b << i);
+    private static int updateBits(int n, int m, int i, int j) {
+        return i > j || i < 0 || j >= 32 ? 0 : (((1 << i) - 1) | (~0 << j + 1)) & n | (m << i);
     }
 
     public static int updateBits2(int n, int m, int i, int j) {
