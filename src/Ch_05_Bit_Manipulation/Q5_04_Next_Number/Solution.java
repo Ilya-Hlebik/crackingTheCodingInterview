@@ -7,21 +7,21 @@ public class Solution {
 
     public static void main(String[] args) {
         for (int i = 0; i < 200; i++) {
-            int p1 = getPrevSlow(i);
-            int p2 = getPrevSlow3(i);
+        /*    int p1 = getPrevSlow(i);
+            int p2 = getPrevSlow3(i);*/
              /*        int p2 = QuestionB.getPrev(i);
             int p3 = QuestionC.getPrevArith(i);
 */
-            int n1 = getNextSlow(i);
-            int n2 = getNextSlow2(i);
+            int n1 = getPrevSlow(i);
+            int n2 = Solution2.getPrevious(i);
 /*            int n2 = QuestionB.getNext(i);
             int n3 = QuestionC.getNextArith(i);*/
 
-            if (p1 != p2) {
+            if (n1 != n2) {
                 System.out.println("----------");
                 binPrint(i);
-                binPrint(p1);
-                binPrint(p2);
+                binPrint(n1);
+                binPrint(n2);
                 System.out.println("----------");
             }
           /*  if (p1 != p2 || p2 != p3 || n1 != n2 || n2 != n3) {
