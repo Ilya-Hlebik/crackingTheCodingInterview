@@ -5,14 +5,14 @@ import java.util.List;
 
 public class Solution {
     static int currentPoisoned = 1;
-    static int totalTo = 10000;
+    static int totalTo = 1000;
     static int totalFrom = 0;
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        for (int i = 115; i < 10000; i++) {
+        for (int i = 115; i < 1000; i++) {
             currentPoisoned = i;
-            totalTo = 10000;
+            totalTo = 1000;
             totalFrom = 0;
             System.out.println(solution.amountOfDays());
         }
@@ -22,32 +22,32 @@ public class Solution {
         int countOfDays = 0;
         int countOfTests = 10;
         while (countOfTests > 0) {
-            int each = (totalTo - totalFrom) / countOfTests;
-            if (each == 0){
+            int each = (int) Math.round((double) (totalTo - totalFrom) / countOfTests);
+            if (each == 0) {
                 each = 1;
             }
             List<Pair> tests = new ArrayList<>();
             for (int i = 0; i < countOfTests && totalTo != 0; i++) {
                 int currentTest;
                 Pair pair = new Pair();
-                if (i+1 == countOfTests) {
+                if (i + 1 == countOfTests) {
                     pair.setTo(totalTo);
                     pair.setFrom(totalFrom);
                 } else {
                     currentTest = totalTo - each;
                     pair.setTo(totalTo);
-                    totalTo  = currentTest;
+                    totalTo = currentTest;
                     pair.setFrom(totalTo);
                 }
                 tests.add(pair);
-                if (pair.getFrom() == totalFrom){
+                if (pair.getFrom() == totalFrom) {
                     break;
                 }
             }
             countOfDays += 7;
             for (Pair test : tests) {
                 boolean poisoned = isPoisoned(test);
-                if (poisoned && test.getFrom() +1 != test.getTo()) {
+                if (poisoned && test.getFrom() + 1 != test.getTo()) {
                     countOfTests--;
                     totalFrom = test.getFrom();
                     totalTo = test.getTo();
