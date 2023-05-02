@@ -1,5 +1,7 @@
 package Ch_07_Object_Oriented_Design.Q7_01_Deck_of_Cards;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,87 +16,83 @@ public class BlackJackGame {
         this.blackJackDeck = blackJackDeck;
     }
 
-    public GameStatus playerTurn(boolean firstTurn) {
-        Integer sum;
-        if (firstTurn) {
-            List<BlackJackCard> blackJackCards = playerHand.getBlackJackCards();
-            BlackJackCard firstCard = blackJackDeck.getNext();
-            BlackJackCard secondCard = blackJackDeck.getNext();
-            blackJackCards.add(firstCard);
-            sum = calculateSum(firstCard, dealerHand);
-            blackJackCards.add(secondCard);
-        } else {
-            BlackJackCard firstCard = blackJackDeck.getNext();
-            sum = calculateSum(firstCard, dealerHand);
-        }
+    public void playerTurn() {
+        BlackJackCard firstCard = blackJackDeck.getNext();
+        int sum = calculateSum(firstCard, playerHand);
         if (sum > 21) {
-            return GameStatus.DEALER_WON;
-        } else if (playerHand.getBlackJackCards().size() == 2 && sum == 21) {
-            return GameStatus.PLAYER_BJ;
+            setGameStatus(GameStatus.DEALER_WON);
         }
-        return GameStatus.CONTINUE;
     }
 
-    public GameStatus dealerTurn(boolean firstTurn) {
-        Integer sum;
-        if (firstTurn) {
-            List<BlackJackCard> blackJackCards = dealerHand.getBlackJackCards();
-            BlackJackCard firstCard = blackJackDeck.getNext();
-            BlackJackCard secondCard = blackJackDeck.getNext();
-            blackJackCards.add(firstCard);
-            sum = calculateSum(firstCard, dealerHand);
-            blackJackCards.add(secondCard);
+    public void dealerTurn() {
+        int sum;
+        if (dealerHand.getHiddenCard() != null) {
+            BlackJackCard hiddenCard = dealerHand.getHiddenCard();
+            sum = calculateSum(hiddenCard, dealerHand);
+            dealerHand.setHiddenCard(null);
         } else {
             BlackJackCard firstCard = blackJackDeck.getNext();
             sum = calculateSum(firstCard, dealerHand);
         }
         if (sum >= 17 && playerHand.getCurrentSum() > dealerHand.getCurrentSum()) {
-            return GameStatus.PLAYER_WON;
-        } else if (sum == 21 && dealerHand.getBlackJackCards().size() == 2) {
-            return GameStatus.DEALER_BJ;
-        } else if (sum >= 17 && playerHand.getCurrentSum() < dealerHand.getCurrentSum()) {
-            return GameStatus.DEALER_WON;
+            setGameStatus(GameStatus.PLAYER_WON);
+        } else if (sum == 21 && dealerHand.getCards().size() == 2) {
+            setGameStatus(GameStatus.DEALER_BJ);
+        } else if (sum >= 17 && sum <= 21 && playerHand.getCurrentSum() < dealerHand.getCurrentSum()) {
+            setGameStatus(GameStatus.DEALER_WON);
+        } else if (sum >= 17 && sum <= 21 && playerHand.getCurrentSum().equals(dealerHand.getCurrentSum())) {
+            setGameStatus(GameStatus.DRAW);
         } else if (sum > 21) {
-            return GameStatus.PLAYER_WON;
+            setGameStatus(GameStatus.PLAYER_WON);
         }
-        return GameStatus.CONTINUE;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.out.println("------------START---------");
 
         BlackJackGame blackJackGame = new BlackJackGame(new BlackJackDeck());
         blackJackGame.initialize();
         BlackJackHand dealerHand = blackJackGame.getDealerHand();
         BlackJackHand playerHand = blackJackGame.getPlayerHand();
-        System.out.println("Dealer Cards: " + dealerHand.getBlackJackCards() + " Dealer sum: " + dealerHand.getCurrentSum());
-        System.out.println("Player Cards: " + playerHand.getBlackJackCards() + " Player sum: " + playerHand.getCurrentSum());
-
-        while (blackJackGame.gameStatus == GameStatus.CONTINUE){
-
-
-            System.out.println(blackJackGame.gameStatus);
+        System.out.println("Dealer Cards: " + dealerHand.getCards() + " Dealer sum: " + dealerHand.getCurrentSum());
+        System.out.println("Player Cards: " + playerHand.getCards() + " Player sum: " + playerHand.getCurrentSum());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        if (playerHand.getCards().size() == 2 && playerHand.getCurrentSum() == 21) {
+            blackJackGame.setGameStatus(GameStatus.PLAYER_BJ);
         }
-
-/*        blackJackGame.dealerTurn(true);
-
-        blackJackGame.playerTurn();*/
-
+        while (blackJackGame.getGameStatus() == GameStatus.CONTINUE || blackJackGame.getGameStatus() == GameStatus.PLAYER_STOP) {
+            if (blackJackGame.getGameStatus() != GameStatus.PLAYER_STOP) {
+                System.out.println("Do you need more?(y/n)");
+                String readLine = reader.readLine();
+                if ("y".equals(readLine)) {
+                    blackJackGame.playerTurn();
+                } else if ("n".equals(readLine)) {
+                    blackJackGame.setGameStatus(GameStatus.PLAYER_STOP);
+                } else {
+                    System.out.println("Wrong input, try again");
+                }
+                System.out.println("Player Cards: " + playerHand.getCards() + " Player sum: " + playerHand.getCurrentSum());
+            } else {
+                blackJackGame.dealerTurn();
+            }
+            System.out.println("Dealer Cards: " + dealerHand.getCards() + " Dealer sum: " + dealerHand.getCurrentSum());
+        }
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!! " + blackJackGame.getGameStatus() + " !!!!!!!!!!!!!!!!!!!!");
     }
 
     private void initialize() {
-        List<BlackJackCard> playerHandBlackJackCards = playerHand.getBlackJackCards();
+        List<BlackJackCard> playerHandBlackJackCards = playerHand.getCards();
         playerHandBlackJackCards.add(blackJackDeck.getNext());
         playerHandBlackJackCards.add(blackJackDeck.getNext());
-        List<BlackJackCard> dealerHandBlackJackCards = dealerHand.getBlackJackCards();
+        List<BlackJackCard> dealerHandBlackJackCards = dealerHand.getCards();
         dealerHandBlackJackCards.add(blackJackDeck.getNext());
         dealerHand.setHiddenCard(blackJackDeck.getNext());
         calculateCurrentSum(dealerHand);
         calculateCurrentSum(playerHand);
     }
 
-    private <T extends BlackJackHand> void calculateCurrentSum(T hand) {
-        List<BlackJackCard> blackJackCards = hand.getBlackJackCards();
+    private <T extends BlackJackHand> int calculateCurrentSum(T hand) {
+        List<BlackJackCard> blackJackCards = hand.getCards();
         int totalSum = blackJackCards.stream()
                 .mapToInt(Card::getCardValue)
                 .sum();
@@ -107,16 +105,12 @@ public class BlackJackGame {
             totalSum -= 10;
         }
         hand.setCurrentSum(totalSum);
+        return totalSum;
     }
 
     private Integer calculateSum(BlackJackCard next, BlackJackHand hand) {
-
-        Integer sum = 0;
-        /*       for (BlackJackCard blackJackCard : blackJackCards) {
-         *//*Logic for ace*//*
-            sum += blackJackCard.getCardValue();
-        }*/
-        return sum;
+        hand.getCards().add(next);
+        return calculateCurrentSum(hand);
     }
 
     public BlackJackDeck getBlackJackDeck() {
@@ -133,5 +127,9 @@ public class BlackJackGame {
 
     public GameStatus getGameStatus() {
         return gameStatus;
+    }
+
+    public void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
     }
 }
