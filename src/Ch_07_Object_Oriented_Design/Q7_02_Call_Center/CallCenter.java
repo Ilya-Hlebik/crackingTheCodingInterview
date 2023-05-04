@@ -21,38 +21,29 @@ public class CallCenter {
         });
         Thread dispatchCallThread = new Thread(() -> {
             while (true){
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 callHandlerService.dispatchCall();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                if (random.nextBoolean()){
+                    Call call = callHandlerService.currentCalls().get(0);
+                    callHandlerService.escalateCall(call);
+                    callHandlerService.transferCall(call);
+                }
+                else {
+                    employeeService.finishCall(callHandlerService.currentCalls().get(0));
+                    continue;
+                }
             }
         });
-
         newCallsThread.start();
-        while (true){
-            Call call = new Call();
-            callHandlerService.addCallToQueue(call);
-            callHandlerService.dispatchCall();
-            if (random.nextBoolean()){
-                callHandlerService.escalateCall(call);
-            }
-            else {
-                employeeService.finishCall(call);
-                continue;
-            }
-            callHandlerService.transferCall(call);
-            continue;
-        }
-    }
-}
-class NewCalls implements Runnable{
-
-    @Override
-    public void run() {
-        while (true){
-
-        }
+        dispatchCallThread.start();
     }
 }

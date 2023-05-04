@@ -8,4 +8,5 @@ public interface CallHandlerService {
     void transferCall(Call call);
     void escalateCall(Call call);
     List<Employee> getAllEmployees();
+    List<Call> currentCalls();
 }

@@ -22,4 +22,12 @@ public class Call {
     public void setHandler(Employee handler) {
         this.handler = handler;
     }
+
+    @Override
+    public String toString() {
+        return "Call{" +
+                "rank=" + rank +
+                ", handler=" + handler +
+                '}';
+    }
 }

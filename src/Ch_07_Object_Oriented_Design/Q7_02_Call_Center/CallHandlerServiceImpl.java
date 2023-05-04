@@ -11,8 +11,9 @@ import java.util.*;
  */
 public class CallHandlerServiceImpl implements CallHandlerService {
     private final List<Employee> employeeList = new ArrayList<>();
-    private final Queue<Call> calls = new LinkedList<>();
+    private final Queue<Call> callsQueue = new LinkedList<>();
     private final Queue<Call> priorityCalls = new LinkedList<>();
+    private final List<Call> currentCalls = new ArrayList<>();
 
     public CallHandlerServiceImpl() {
         for (int i = 0; i < 10; i++) {
@@ -29,44 +30,50 @@ public class CallHandlerServiceImpl implements CallHandlerService {
 
     @Override
     public void addCallToQueue(Call call) {
-        calls.add(call);
+        System.out.println("addCallToQueue" + call);
+        callsQueue.add(call);
     }
 
     @Override
     public void dispatchCall() {
-        if (calls.isEmpty() && priorityCalls.isEmpty()) {
+        if (callsQueue.isEmpty() && priorityCalls.isEmpty()) {
             System.out.println("Queue is empty");
             return;
         }
+        System.out.println("dispatchCall");
         Call call;
         boolean isPriority = false;
         if (!priorityCalls.isEmpty()) {
             call = priorityCalls.peek();
             isPriority = true;
         } else {
-            call = calls.peek();
+            call = callsQueue.peek();
         }
         Optional<Employee> first = getEmployeeByRank(call.getRank());
         boolean present = first.isPresent();
         if (present) {
             first.get().setAvailable(false);
             first.get().setCall(call);
+            call.setHandler(first.get());
+            currentCalls.add(call);
             if (isPriority) {
                 priorityCalls.poll();
             } else {
-                calls.poll();
+                callsQueue.poll();
             }
         }
     }
 
     @Override
     public void transferCall(Call call) {
+        System.out.println("transferCall " + call);
         releaseEmployee(call.getHandler());
         if (Rank.Manager.equals(call.getRank())) {
             getEmployeeByRank(Rank.Manager)
                     .ifPresentOrElse(emp -> {
                         emp.setAvailable(false);
                         emp.setCall(call);
+                        call.setHandler(emp);
                     }, () -> assignToDirector(call));
         } else if (Rank.Director.equals(call.getRank())) {
             assignToDirector(call);
@@ -75,6 +82,7 @@ public class CallHandlerServiceImpl implements CallHandlerService {
 
     @Override
     public void escalateCall(Call call) {
+        System.out.println("escalateCall " + call);
         if (Rank.Respondent.equals(call.getRank())) {
             call.setRank(Rank.Manager);
         } else if (Rank.Manager.equals(call.getRank())) {
@@ -87,11 +95,18 @@ public class CallHandlerServiceImpl implements CallHandlerService {
         return employeeList;
     }
 
+    @Override
+    public List<Call> currentCalls() {
+        return currentCalls;
+    }
+
     private void assignToDirector(Call call) {
+        System.out.println("assignToDirector " + call);
         getEmployeeByRank(Rank.Director)
                 .ifPresentOrElse(emp -> {
                     emp.setAvailable(false);
                     emp.setCall(call);
+                    call.setHandler(emp);
                 }, () -> priorityCalls.add(call));
     }
 

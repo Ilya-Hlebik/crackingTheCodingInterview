@@ -9,6 +9,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void finishCall(Call call) {
+        System.out.println("finishCall " + call);
         callHandlerService.getAllEmployees()
                 .stream()
                 .filter(emp -> emp.equals(call.getHandler()))
@@ -17,5 +18,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                     emp.setCall(null);
                     emp.setAvailable(true);
                 });
+        callHandlerService.currentCalls().remove(call);
     }
 }
