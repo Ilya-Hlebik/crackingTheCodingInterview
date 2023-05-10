@@ -4,4 +4,9 @@ public class Car extends Vehicle {
     public Car() {
         vehicleSize = VehicleSize.Compact;
     }
+
+    @Override
+    public void print() {
+        System.out.print("C");
+    }
 }

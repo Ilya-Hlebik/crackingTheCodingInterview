@@ -5,4 +5,9 @@ public class Bus extends Vehicle {
     public Bus() {
         vehicleSize = VehicleSize.Large;
     }
+
+    @Override
+    public void print() {
+        System.out.print("B");
+    }
 }

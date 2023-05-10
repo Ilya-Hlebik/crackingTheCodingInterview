@@ -1,12 +1,35 @@
 package Ch_07_Object_Oriented_Design.Q7_04_Parking_Lot;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Level {
     private int floor;
     private List<List<ParkingSpot>> parkingSpots;
     private int availableSpots;
     private static final int SPOTS_PER_ROW = 10;
+
+    public Level(int flr, int numberSpots) {
+        floor = flr;
+        parkingSpots = new ArrayList<>();
+        int largeSpots = numberSpots / 4;
+        int bikeSpots = numberSpots / 4;
+        int compactSpots = numberSpots - largeSpots - bikeSpots;
+        for (int i = 0; i < numberSpots / SPOTS_PER_ROW; i++) {
+            parkingSpots.add(new ArrayList<>());
+        }
+        for (int i = 0, j = 0; i < numberSpots; i++, j = i / 10) {
+            VehicleSize sz = VehicleSize.Moto;
+            if (i < largeSpots) {
+                sz = VehicleSize.Large;
+            } else if (i < largeSpots + compactSpots) {
+                sz = VehicleSize.Compact;
+            }
+            int row = i / SPOTS_PER_ROW;
+            parkingSpots.get(j).add(new ParkingSpot(this, row, i, sz));
+        }
+        availableSpots = numberSpots;
+    }
 
     public boolean parkVehicle(Vehicle vehicle) {
         if (availableSpots == 0) {
@@ -52,14 +75,28 @@ public class Level {
         return false;
     }
 
-    private void assignCarToSpot(Vehicle vehicle, ParkingSpot firstCompactPriority) {
-        firstCompactPriority.setVehicle(vehicle);
-        firstCompactPriority.setEmpty(false);
+    private void assignCarToSpot(Vehicle vehicle, ParkingSpot spot) {
+        spot.setVehicle(vehicle);
+        spot.setEmpty(false);
         availableSpots--;
-        vehicle.
+        vehicle.parkInSpot(spot);
     }
 
     public void spotFreed() {
         availableSpots++;
+    }
+
+    public void print() {
+        AtomicInteger lastRow = new AtomicInteger(-1);
+        parkingSpots
+                .stream()
+                .flatMap(Collection::stream)
+                .forEach(parkingSpot -> {
+                    if (parkingSpot.getRowNumber() != lastRow.get()) {
+                        System.out.print("  ");
+                        lastRow.set(parkingSpot.getRowNumber());
+                    }
+                    parkingSpot.print();
+                });
     }
 }
