@@ -11,4 +11,17 @@ public enum Orientation {
             default: return null;
         }
     }
+    public Orientation getNext() {
+        switch (this) {
+            case LEFT: return TOP;
+            case TOP: return RIGHT;
+            case RIGHT: return BOTTOM;
+            case BOTTOM: return LEFT;
+            default: return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(-1 %4);
+    }
 }
