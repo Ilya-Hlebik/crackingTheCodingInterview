@@ -37,4 +37,13 @@ public class Edge {
     public String toString() {
         return code;
     }
+
+    public boolean fitsWith(Edge edge) {
+        return edge.getCode().equals(getCode());
+    }
+
+    public Edge _createMatchingEdge() {
+        if (shape == Shape.FLAT) return null;
+        return new Edge(shape.getOpposite(), getCode());
+    }
 }

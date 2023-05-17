@@ -22,20 +22,48 @@ public class Puzzle {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 LinkedList<Piece> piecesToSearch = getPieceListToSearch(cornerPieces, borderPieces, insidePieces, row, column);
-                fitNextEdge(piecesToSearch, row, column);
+                if (!fitNextEdge(piecesToSearch, row, column)) {
+                    return false;
+                }
             }
         }
         return true;
     }
 
-    private void fitNextEdge(LinkedList<Piece> piecesToSearch, int row, int column) {
+    private boolean fitNextEdge(LinkedList<Piece> piecesToSearch, int row, int column) {
         if (row == 0 && column == 0) {
             Piece piece = piecesToSearch.remove();
             orientTopLeftCorner(piece);
             solution[0][0] = piece;
         } else {
+            Piece pieceToMatch = column == 0 ? solution[row - 1][0] : solution[row][column - 1];
+            Orientation orientationToMatch = column == 0 ? Orientation.BOTTOM : Orientation.RIGHT;
+            Edge edgeToMatch = pieceToMatch.getEdgeByOrientation(orientationToMatch);
 
+            Edge edge = getMatchingEdge(edgeToMatch, piecesToSearch);
+            if (edge == null) return false;
+
+            Orientation orientation = orientationToMatch.getOpposite();
+            setEdgeInSolution(piecesToSearch, edge, row, column, orientation);
         }
+        return true;
+    }
+
+    private void setEdgeInSolution(LinkedList<Piece> piecesToSearch, Edge edge, int row, int column, Orientation orientation) {
+        Piece parentPiece = edge.getParentPiece();
+        parentPiece.setEdgeAsOrientation(edge, orientation);
+        piecesToSearch.remove(parentPiece);
+        solution[row][column] = parentPiece;
+    }
+
+    private Edge getMatchingEdge(Edge edgeToMatch, LinkedList<Piece> piecesToSearch) {
+        for (Piece piece : piecesToSearch) {
+            Edge matchingEdge = piece.getMatchingEdge(edgeToMatch);
+            if (matchingEdge != null) {
+                return matchingEdge;
+            }
+        }
+        return null;
     }
 
     private void orientTopLeftCorner(Piece piece) {
@@ -84,5 +112,9 @@ public class Puzzle {
                 cornerPieces.add(piece);
             }
         }
+    }
+
+    public Piece[][] getCurrentSolution() {
+        return solution;
     }
 }

@@ -1,17 +1,16 @@
 package Ch_07_Object_Oriented_Design.Q7_06_Jigsaw;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Piece {
     private final static int NUMBER_OF_EDGES = 4;
     private HashMap<Orientation, Edge> edges = new HashMap<>();
 
-    public Piece(List<Edge> edgeList) {
+    public Piece(Edge[] edgeList) {
         Orientation[] orientations = Orientation.values();
-        for (int i = 0; i < edgeList.size(); i++) {
-            Edge edge = edgeList.get(i);
+        for (int i = 0; i < edgeList.length; i++) {
+            Edge edge = edgeList[i];
             edge.setParentPiece(this);
             edges.put(orientations[i], edge);
         }
@@ -46,20 +45,17 @@ public class Piece {
         rotateEdgesBy(orientation.ordinal() - currentOrientation.ordinal());
     }
 
-    private void rotateEdgesBy(int numberRotations) {
-        HashMap<Orientation, Edge> rotated = new HashMap<>(edges);
+    public void rotateEdgesBy(int numberRotations) {
+        Orientation[] orientations = Orientation.values();
+        HashMap<Orientation, Edge> rotated = new HashMap<Orientation, Edge>();
 
-        if (numberRotations < 0){
-            numberRotations += NUMBER_OF_EDGES;
-        }
-        for (int i = 0; i < numberRotations; i++) {
-            HashMap<Orientation, Edge> copy = new HashMap<>(rotated);
-            for (Map.Entry<Orientation, Edge> orientationEdgeEntry : copy.entrySet()) {
-                Orientation key = orientationEdgeEntry.getKey();
-                Edge value = orientationEdgeEntry.getValue();
-                Orientation next = key.getNext();
-                rotated.put(next, value);
-            }
+        numberRotations = numberRotations % NUMBER_OF_EDGES;
+        if (numberRotations < 0) numberRotations += NUMBER_OF_EDGES;
+
+        for (int i = 0; i < orientations.length; i++) {
+            Orientation oldOrientation = orientations[(i - numberRotations + NUMBER_OF_EDGES) % NUMBER_OF_EDGES];
+            Orientation newOrientation = orientations[i];
+            rotated.put(newOrientation, edges.get(oldOrientation));
         }
         edges = rotated;
     }
@@ -70,5 +66,24 @@ public class Piece {
                 .filter(orientationEdgeEntry -> orientationEdgeEntry.getValue() == current)
                 .map(Map.Entry::getKey)
                 .findFirst().orElse(null);
+    }
+
+    public Edge getMatchingEdge(Edge edgeToMatch) {
+        for (Edge edge : edges.values()) {
+            if (edgeToMatch.fitsWith(edge)) {
+                return edge;
+            }
+        }
+        return null;
+    }
+
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Orientation[] orientations = Orientation.values();
+        for (Orientation o : orientations) {
+            sb.append(edges.get(o).toString() + ",");
+        }
+        return "[" + sb.toString() + "]";
     }
 }
