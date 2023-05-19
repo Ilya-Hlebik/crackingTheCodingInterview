@@ -8,7 +8,20 @@ public class UserManager {
     public List<User> getUserList() {
         return userList;
     }
-    private void addUser(User user){
+    private void addUser(User userFrom, User userTo){
+        /*create Ad request*/
+    }
+    private void rejectAdRequest(AdRequest adRequest){
+
+    }
+    private void approveAdRequest(AdRequest adRequest){
+
+    }
+
+    private void userSignIn(User User){
+
+    }
+    private void userSignIOff(User User){
 
     }
 }
