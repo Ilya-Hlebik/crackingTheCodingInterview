@@ -5,6 +5,7 @@ public class Cell {
     private int column;
     private CellType cellType;
     private boolean hidden = true;
+    private int number;
 
     public Cell(int row, int column, CellType cellType) {
         this.row = row;
@@ -42,5 +43,35 @@ public class Cell {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public boolean isBomb() {
+        return cellType == CellType.BOMB;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public String getUndersideState() {
+        if (isBomb()) {
+            return "* ";
+        } else if (number > 0) {
+            return number + " ";
+        } else {
+            return "  ";
+        }
+    }
+
+    public String getSurfaceState() {
+        if (!isHidden()) {
+            return getUndersideState();
+        } else {
+            return "? ";
+        }
     }
 }
