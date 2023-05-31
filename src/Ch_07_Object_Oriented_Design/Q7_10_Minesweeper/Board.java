@@ -10,24 +10,22 @@ public class Board {
     private int nColumns;
     private int nBombs = 0;
     private Cell[][] cells;
-    private List<Cell> shuffledCells = new ArrayList<>();
+    private final List<Cell> shuffledCells = new ArrayList<>();
     private int numUnexposedRemaining;
+    private boolean initialized;
 
     public Board(int nRows, int nColumns, int nBombs) {
         this.nRows = nRows;
         this.nColumns = nColumns;
         this.nBombs = nBombs;
-
-        initializeBoard();
-        shuffleBoard();
-        setNumberedCells();
-
         numUnexposedRemaining = nRows * nColumns - nBombs;
     }
 
-    public static void main(String[] args) {
-        Board board = new Board(10, 10, 10);
-        board.printBoard(false);
+    public void init(int i, int j){
+        initializeBoard();
+        shuffleBoard(i, j);
+        setNumberedCells();
+        initialized = true;
     }
 
     private void setNumberedCells() {
@@ -68,12 +66,12 @@ public class Board {
             //checkBottomRightDiagonal
             numberOfBombs = updateNumberOfBombs(numberOfBombs, i + 1, j + 1);
         }
-        if (i + 1 < nColumns) {
+        if (i + 1 < nRows) {
             //checkBottom
             numberOfBombs = updateNumberOfBombs(numberOfBombs, i + 1, j);
         }
         if (i + 1 < nRows && j - 1 >= 0) {
-            //checkLeftRightDiagonal
+            //checkLeftBottomDiagonal
             numberOfBombs = updateNumberOfBombs(numberOfBombs, i + 1, j - 1);
         }
         if (j - 1 >= 0) {
@@ -91,12 +89,16 @@ public class Board {
         return numberOfBombs;
     }
 
-    private void shuffleBoard() {
-        Collections.shuffle(shuffledCells);
+    private void shuffleBoard(int rowToEscape, int columnToEscape) {
+        do {
+            Collections.shuffle(shuffledCells);
+        } while (shuffledCells.get(rowToEscape * nRows + columnToEscape).isBomb());
         Iterator<Cell> iterator = shuffledCells.iterator();
         for (int i = 0; i < nRows; i++) {
             for (int j = 0; j < nColumns; j++) {
                 cells[i][j] = iterator.next(); //?
+                cells[i][j].setColumn(i);
+                cells[i][j].setRow(j);
             }
         }
     }
@@ -172,11 +174,39 @@ public class Board {
         }
     }
 
+    public void printInitialBoard() {
+        System.out.println();
+        System.out.print("   ");
+        for (int i = 0; i < nColumns; i++) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        for (int i = 0; i < nColumns; i++) {
+            System.out.print("--");
+        }
+        System.out.println();
+        for (int r = 0; r < nRows; r++) {
+            System.out.print(r + "| ");
+            for (int c = 0; c < nColumns; c++) {
+                System.out.print("? ");
+            }
+            System.out.println();
+        }
+    }
+
     public int getNumUnexposedRemaining() {
         return numUnexposedRemaining;
     }
 
     public void decreaseNumUnexposedRemaining() {
         numUnexposedRemaining--;
+    }
+
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
     }
 }

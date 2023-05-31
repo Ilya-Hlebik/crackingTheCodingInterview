@@ -74,4 +74,7 @@ public class Cell {
             return "? ";
         }
     }
+    public boolean isBlank(){
+        return cellType.equals(CellType.BLANK);
+    }
 }
