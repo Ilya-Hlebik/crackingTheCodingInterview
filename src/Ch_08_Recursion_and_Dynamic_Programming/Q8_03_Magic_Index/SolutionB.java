@@ -4,11 +4,11 @@ import CtCILibrary.AssortedMethods;
 
 import java.util.Arrays;
 
-public class Solution {
+public class SolutionB {
     public static void main(String[] args) {
         for (int i = 0; i < 1000; i++) {
             int size = AssortedMethods.randomIntInRange(5, 20);
-            int[] array = getDistinctSortedArray(size);
+            int[] array = getSortedArray(size);
             int v2 = magicFast(array);
             if (v2 == -1 && magicSlow(array) != -1) {
                 int v1 = magicSlow(array);
@@ -24,10 +24,8 @@ public class Solution {
     }
 
     private static int magicSlow(int[] array) {
+        // 0, 3,3,3,3,4,5
         for (int i = 0; i < array.length; i++) {
-            if (i < array[i]) {
-                return -1;
-            }
             if (array[i] == i) {
                 return i;
             }
@@ -36,7 +34,7 @@ public class Solution {
     }
 
     private static int magicFast(int[] array) {
-       return magicFast(array, 0, array.length - 1);
+        return magicFast(array, 0, array.length - 1);
     }
 
     private static int magicFast(int[] array, int start, int end) {
@@ -44,26 +42,22 @@ public class Solution {
             return -1;
         }
         int mid = (start + end) / 2;
-        if (array[mid] == mid) {
+        int midValue = array[mid];
+        if (midValue == mid) {
             return mid;
         }
-        if (array[mid] < mid) {
-            return magicFast(array, mid + 1, end);
-        } else {
-            return magicFast(array, start, mid - 1);
+        int rightIndex = Math.max(mid + 1, midValue);
+        int right  = magicFast(array, rightIndex, end);
+        if (right >= 0){
+            return right;
         }
+        int leftIndex = Math.min(mid - 1, midValue);
+        return magicFast(array, start, leftIndex);
     }
 
-    public static int[] getDistinctSortedArray(int size) {
+    public static int[] getSortedArray(int size) {
         int[] array = AssortedMethods.randomArray(size, -1 * size, size);
         Arrays.sort(array);
-        for (int i = 1; i < array.length; i++) {
-            if (array[i] == array[i - 1]) {
-                array[i]++;
-            } else if (array[i] < array[i - 1]) {
-                array[i] = array[i - 1] + 1;
-            }
-        }
         return array;
     }
 }
