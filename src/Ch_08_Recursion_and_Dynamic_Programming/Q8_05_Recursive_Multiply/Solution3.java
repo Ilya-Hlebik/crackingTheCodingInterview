@@ -10,7 +10,7 @@ public class Solution3 {
             return bigger;
         }
 
-        int s = smaller >> 1;
+        int s = smaller / 2;
         int halfProd = minProductHelper(s, bigger);
 
         if (smaller % 2 == 0) {
