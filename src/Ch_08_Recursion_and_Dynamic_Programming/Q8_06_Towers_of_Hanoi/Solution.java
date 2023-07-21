@@ -8,9 +8,9 @@ public class Solution {
         Tower destination = new Tower();
         Tower buffer = new Tower();
 
-        source.name = "s";
-        destination.name = "d";
-        buffer.name = "b";
+        source.name = "source";
+        destination.name = "destination";
+        buffer.name = "buffer";
 
         /* Load up tower */
         int numberOfDisks = 3;
@@ -46,6 +46,7 @@ public class Solution {
                 return;
             }
             moveDisks(numberOfDisks - 1, buffer, destination);
+            System.out.println("Move " + disks.peek() + " from " + this.name + " to " + destination.name);
             moveTop(destination);
             buffer.moveDisks(numberOfDisks - 1, destination, this);
         }
