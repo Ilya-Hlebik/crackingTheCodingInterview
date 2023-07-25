@@ -1,10 +1,11 @@
-package Ch_08_Recursion_and_Dynamic_Programming.Q8_07_Permutations_Without_Dups;
+package Ch_08_Recursion_and_Dynamic_Programming.Q8_08_Permutations_With_Dups;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Solution {
     public static void main(String[] args) {
-        ArrayList<String> list = getPerms("abcde") ;
+        ArrayList<String> list = getPerms("aabbccc").stream().distinct().collect(Collectors.toCollection(ArrayList::new));
         System.out.println("There are " + list.size() + " permutations.");
         for (String s : list) {
             System.out.println(s);
@@ -25,7 +26,7 @@ public class Solution {
         for (String word : words) {
             for (int i = 0; i <= word.length(); i++) {
                 String s = new StringBuilder(word).insert(i, first).toString();
-                allPermutations.add(s);
+                    allPermutations.add(s);
             }
         }
         return allPermutations;
