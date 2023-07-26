@@ -26,7 +26,7 @@ public class Solution {
         for (String word : words) {
             for (int i = 0; i <= word.length(); i++) {
                 String s = new StringBuilder(word).insert(i, first).toString();
-                    allPermutations.add(s);
+                allPermutations.add(s);
             }
         }
         return allPermutations;
