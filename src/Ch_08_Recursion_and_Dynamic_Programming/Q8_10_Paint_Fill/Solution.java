@@ -18,8 +18,24 @@ public class Solution {
         PrintScreen(screen);
     }
 
-    private static void PaintFill(Color[][] screen, int r, int c, Color ncolor) {
 
+    private static void PaintFill(Color[][] screen, int r, int c, Color ocolor, Color ncolor) {
+        if (r > screen.length - 1 || r < 0 || c > screen[r].length - 1 || c < 0 || ncolor == screen[r][c] || ocolor != screen[r][c]) {
+            return;
+        }
+        screen[r][c] = ncolor;
+        PaintFill(screen, r - 1, c - 1,ocolor, ncolor);
+        PaintFill(screen, r - 1, c, ocolor, ncolor);
+        PaintFill(screen, r - 1, c + 1, ocolor, ncolor);
+        PaintFill(screen, r, c + 1, ocolor, ncolor);
+        PaintFill(screen, r + 1, c + 1, ocolor, ncolor);
+        PaintFill(screen, r + 1, c, ocolor, ncolor);
+        PaintFill(screen, r + 1, c - 1, ocolor, ncolor);
+        PaintFill(screen, r, c - 1, ocolor, ncolor);
+    }
+
+    private static void PaintFill(Color[][] screen, int r, int c, Color ncolor) {
+        PaintFill(screen, r, c, screen[r][c], ncolor);
     }
 
     private static void PrintScreen(Color[][] screen) {
@@ -36,6 +52,6 @@ public class Solution {
     }
 }
 
-  enum Color {
+enum Color {
     Black, White, Red, Yellow, Green
 }
