@@ -6,16 +6,16 @@ public class Solution2 {
     public static int GRID_SIZE = 8;
 
     public static void main(String[] args) {
-        ArrayList<Integer[][]> results = new ArrayList<>();
-        Integer[][] columns = new Integer[GRID_SIZE][GRID_SIZE];
+        ArrayList<Integer[]> results = new ArrayList<>();
+        Integer[] columns = new Integer[GRID_SIZE];
         clear(columns);
         placeQueens(0, columns, results);
-        printBoards(results);
+     printBoards(results);
         System.out.println(results.size());
     }
 
-    private static void placeQueens(int row, Integer[][] columns, ArrayList<Integer[][]> results) {
-        if (row == GRID_SIZE) {
+    private static void placeQueens(int row, Integer[] columns, ArrayList<Integer[]> results) {
+        if (GRID_SIZE == row) {
             results.add(columns.clone());
         } else {
             for (int col = 0; col < GRID_SIZE; col++) {
@@ -23,42 +23,27 @@ public class Solution2 {
                     columns[row] = col;
                     placeQueens(row + 1, columns, results);
                 }
-
             }
         }
     }
 
-    private static boolean checkValid(Integer[][] columns, int row, int col) {
+    private static boolean checkValid(Integer[] columns, int row, int col) {
         for (int i = 0; i < row; i++) {
-            Integer value = columns[i][col];
-            if (value != -1) {
+            Integer tempColumn = columns[i];
+            if (tempColumn == col) {
                 return false;
             }
 
-            columns[i][]
-
-        }
-        Integer tempColumn = columns[i];
-
-        if (tempColumn == col) {
-            return false;
-        }
-
-        if (Math.abs(row - i) == Math.abs(tempColumn - col)) {
-            return false;
-        }
-
-
-    }
-        return true;
-}
-
-    public static void clear(Integer[][] columns) {
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                columns[i][j] = -1;
+            if (Math.abs(row - i) == Math.abs(col - tempColumn)) {
+                return false;
             }
+        }
+        return true;
+    }
 
+    public static void clear(Integer[] columns) {
+        for (int i = 0; i < GRID_SIZE; i++) {
+            columns[i] = -1;
         }
     }
 
