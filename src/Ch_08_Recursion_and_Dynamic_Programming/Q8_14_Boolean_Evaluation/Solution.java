@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class Solution2 {
+public class Solution {
     public static boolean allEqual(HashMap<String, Integer> map) {
         int val = 0;
         for (Map.Entry<String, Integer> e : map.entrySet()) {
@@ -42,31 +42,28 @@ public class Solution2 {
     public static void main(String[] args) {
         String terms = "0^0|1&1^1|0|1";
         boolean result = true;
-        int a = countEval(terms, result, new HashMap<>());
+        int a = countEval(terms, result);
         System.out.println(a);
         System.out.println(count);
     }
 
     public static int count = 0;
 
-    private static int countEval(String terms, boolean result, HashMap<String, Integer> memo) {
+    private static int countEval(String terms, boolean result) {
         count++;
         if (terms.length() == 0) return 0;
         if (terms.length() == 1) {
             return stringToBool(terms) == result ? 1 : 0;
-        }
-        if (memo.containsKey(result + terms)) {
-            return memo.get(result + terms);
         }
         int ways = 0;
         for (int i = 1; i < terms.length(); i += 2) {
             char c = terms.charAt(i);
             String left = terms.substring(0, i);
             String right = terms.substring(i + 1);
-            int leftTrue = countEval(left, true, memo);
-            int leftFalse = countEval(left, false, memo);
-            int rightTrue = countEval(right, true, memo);
-            int rightFalse = countEval(right, false, memo);
+            int leftTrue = countEval(left, true);
+            int leftFalse = countEval(left, false);
+            int rightTrue = countEval(right, true);
+            int rightFalse = countEval(right, false);
             int total = (leftTrue + leftFalse) * (rightTrue + rightFalse);
 
             int totalTrue = 0;
@@ -80,7 +77,6 @@ public class Solution2 {
             int subways = result ? totalTrue : total - totalTrue;
             ways += subways;
         }
-        memo.put(result + terms, ways);
         return ways;
     }
 
