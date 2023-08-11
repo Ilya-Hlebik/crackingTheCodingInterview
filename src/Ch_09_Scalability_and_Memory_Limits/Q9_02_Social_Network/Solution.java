@@ -1,81 +1,73 @@
 package Ch_09_Scalability_and_Memory_Limits.Q9_02_Social_Network;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Solution {
-    private static LinkedList<Person> getShortestPath(Person sourcePerson, Person destination){
-        List<List<Node>> sourceSubFriends = new ArrayList<>();
-        List<List<Node>> destinationSubFriends = new ArrayList<>();
-        LinkedList<Person> result = new LinkedList<>();
-        result.add(sourcePerson);
-        Person sourceCopy = sourcePerson;
-        Person destinationCopy = destination;
-        Node sourceNode = new Node(sourcePerson);
-        Node destinationNode = new Node(destination);
 
-        while (true){
-            sourceNode.setNext();
-            List<Node> sourceNodeNext = sourceNode.getNext();
+    public static LinkedList<Person> findPathBFS(HashMap<Integer, Person> people, int source, int destination) {
+        Queue<Node> toVisit = new LinkedList<>();
+        HashSet<Integer> visited = new HashSet<>();
+        toVisit.add(new Node(people.get(source), null));
 
-            List<Node> destinationNodeNext = destinationNode.getNext();
-            sourceSubFriends.add(sourceNodeNext);
-            destinationSubFriends.add(destinationNodeNext);
-
-            if (sourceSubFriends
-                    .stream().flatMap(Collection::stream)
-                    .anyMatch(node -> destinationSubFriends.stream().flatMap(Collection::stream).anyMatch(node::equals))) {
-                sourceSubFriends
-                        .stream().flatMap(Collection::stream)
-                        .anyMatch(node -> destinationSubFriends.stream().flatMap(Collection::stream).anyMatch(node::equals))
+        while (!toVisit.isEmpty()) {
+            Node node = toVisit.poll();
+            Person person = node.getPerson();
+            visited.add(person.getId());
+            if (person.getId() == destination) {
+                return node.collapse(false);
             }
-            for (Node node : sourceNodeNext) {
-                node.getPerson().equals()
-            }
-            if (friends.stream().anyMatch(friends1::contains)){
-                Person person = friends.stream().filter(friends1::contains)
-                        .findAny().get();
-                result.add(person);
-                result.add(destination);
-                break;
-            }
-            sourcePerson.setFriends(friends);
-            destination.setFriends(friends1);
-            sourceCopy =
+            List<Integer> friends = person.getFriends();
+            friends.forEach(friendId -> {
+                if (!visited.contains(friendId)) {
+                    toVisit.add(new Node(people.get(friendId), node));
+                }
+            });
         }
-        return result;
+        return null;
     }
-    public static void main(String[] args) {
-        Person source = new Person("source");
-        Person notCommonFriend = new Person("test");
-        Person com = new Person("com");
-        notCommonFriend.setFriends(List.of(com));
-        source.setFriends(List.of(notCommonFriend, new Person("test2")));
 
-        Person destination = new Person("destination");
-        destination.setFriends(List.of(com, new Person("test3"), new Person("test4")));
-        LinkedList<Person> shortestPath = getShortestPath(source, destination);
-        System.out.println(shortestPath);
+    public static void main(String[] args) {
+        int nPeople = 11;
+        HashMap<Integer, Person> people = new HashMap<Integer, Person>();
+        for (int i = 0; i < nPeople; i++) {
+            Person p = new Person(i);
+            people.put(i, p);
+        }
+
+        int[][] edges = {{1, 4}, {1, 2}, {1, 3}, {3, 2}, {4, 6}, {3, 7}, {6, 9}, {9, 10}, {5, 10}, {2, 5}, {3, 7}};
+
+        for (int[] edge : edges) {
+            Person source = people.get(edge[0]);
+            source.addFriend(edge[1]);
+
+            Person destination = people.get(edge[1]);
+            destination.addFriend(edge[0]);
+        }
+
+        int i = 1;
+        int j = 10;
+        LinkedList<Person> path1 = findPathBFS(people, i, j);
+        printPeople(path1);
+    }
+
+    public static void printPeople(LinkedList<Person> path) {
+        if (path == null) {
+            System.out.println("No path");
+        } else {
+            for (Person p : path) {
+                System.out.println(p.getId());
+            }
+        }
     }
 }
 
-class Node{
-    private List<Node> next;
+class Node {
     private Node previous;
     private Person person;
 
-    public Node(Person person) {
+    public Node(Person person, Node previous) {
         this.person = person;
-    }
-
-    public List<Node> getNext() {
-        return next;
-    }
-
-    public void setNext(List<Node> next) {
-        this.next = next;
+        this.previous = previous;
     }
 
     public Node getPrevious() {
@@ -93,15 +85,37 @@ class Node{
     public void setPerson(Person person) {
         this.person = person;
     }
+
+    public LinkedList<Person> collapse(boolean startsWithRoot) {
+        LinkedList<Person> result = new LinkedList<>();
+        Node node = this;
+        while (node != null) {
+            if (startsWithRoot) {
+                result.add(node.getPerson());
+            } else {
+                result.addFirst(node.getPerson());
+            }
+            node = node.getPrevious();
+        }
+        return result;
+    }
 }
 
 class Person {
+    private Integer id;
     private String name;
-    private List<Person> friends;
+    private List<Integer> friends = new ArrayList<>();
 
+    public Person(Integer id) {
+        this.id = id;
+    }
 
-    public Person(String name) {
-        this.name = name;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -112,12 +126,12 @@ class Person {
         this.name = name;
     }
 
-    public List<Person> getFriends() {
-        return friends;
+    public void addFriend(int id) {
+        friends.add(id);
     }
 
-    public void setFriends(List<Person> friends) {
-        this.friends = friends;
+    public List<Integer> getFriends() {
+        return friends;
     }
 
     @Override
