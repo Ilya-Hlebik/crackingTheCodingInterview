@@ -12,8 +12,6 @@ public class Solution {
         Arrays.sort(array, new AnagramComparator());
         System.out.println(AssortedMethods.stringArrayToString(array));
     }
-
-
 }
 
 class AnagramComparator implements Comparator<String> {
