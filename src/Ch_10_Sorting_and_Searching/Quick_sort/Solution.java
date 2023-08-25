@@ -1,4 +1,4 @@
-package Ch_10._Sorting_and_Searching.Quick_sort;
+package Ch_10_Sorting_and_Searching.Quick_sort;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package Ch_10._Sorting_and_Searching.Q10_01_Sorted_Merge;
+package Ch_10_Sorting_and_Searching.Q10_01_Sorted_Merge;
 
 import CtCILibrary.AssortedMethods;
 

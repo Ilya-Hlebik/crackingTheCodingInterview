@@ -1,4 +1,4 @@
-package Ch_10._Sorting_and_Searching.Binary_search;
+package Ch_10_Sorting_and_Searching.Binary_search;
 
 public class Solution {
     public static void main(String[] args) {

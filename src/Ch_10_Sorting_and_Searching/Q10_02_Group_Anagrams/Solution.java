@@ -1,4 +1,4 @@
-package Ch_10._Sorting_and_Searching.Q10_02_Group_Anagrams;
+package Ch_10_Sorting_and_Searching.Q10_02_Group_Anagrams;
 
 import CtCILibrary.AssortedMethods;
 

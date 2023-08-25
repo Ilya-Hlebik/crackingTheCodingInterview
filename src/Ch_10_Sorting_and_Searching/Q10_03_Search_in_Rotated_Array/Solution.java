@@ -1,4 +1,4 @@
-package Ch_10._Sorting_and_Searching.Q10_03_Search_in_Rotated_Array;
+package Ch_10_Sorting_and_Searching.Q10_03_Search_in_Rotated_Array;
 
 
 public class Solution {
