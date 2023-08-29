@@ -18,8 +18,22 @@ public class Solution {
         }
         int mid = low + (high - low) / 2;
         String midValue = array[mid];
-        while (midValue.equals("")) {
-            midValue = array[++mid];
+        if (midValue.equals("")) {
+            int leftMid = mid;
+            int rightMid = mid;
+            while (leftMid > low && rightMid < high) {
+                if (!array[--leftMid].equals("")) {
+                    mid = leftMid;
+                    break;
+                } else if (!array[++rightMid].equals("")) {
+                    mid = rightMid;
+                    break;
+                }
+            }
+            if (array[mid].equals("")) {
+                return -1;
+            }
+            midValue = array[mid];
         }
         int comparison = midValue.compareTo(value);
         if (comparison == 0) {
