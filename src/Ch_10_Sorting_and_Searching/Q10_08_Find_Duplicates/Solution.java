@@ -8,6 +8,7 @@ public class Solution {
         System.out.println(AssortedMethods.arrayToString(array));
         checkDuplicates(array);
     }
+
     public static void checkDuplicates(int[] array) {
         BitSet bs = new BitSet(32000);
         for (int i = 0; i < array.length; i++) {
@@ -23,21 +24,17 @@ public class Solution {
 }
 
 class BitSet {
-    int[] bitset;
+    private int[] bitset;
 
     public BitSet(int size) {
-        bitset = new int[(size >> 5) + 1]; // divide by 32
+        this.bitset = new int[(size >> 5) + 1];
     }
 
-    boolean get(int pos) {
-        int wordNumber = (pos >> 5); // divide by 32
-        int bitNumber = (pos & 0x1F); // mod 32
-        return (bitset[wordNumber] & (1 << bitNumber)) != 0;
+    public boolean get(int pos) {
+        return (bitset[pos >> 5] & 1 << pos) != 0;
     }
 
-    void set(int pos) {
-        int wordNumber = (pos >> 5); // divide by 32
-        int bitNumber = (pos & 0x1F); // mod 32
-        bitset[wordNumber] |= 1 << bitNumber;
+    public void set(int pos) {
+        bitset[pos >> 5] |= 1 << pos;
     }
 }
