@@ -3,67 +3,113 @@ package Ch_10_Sorting_and_Searching.Q10_09_Sorted_Matrix_Search;
 import CtCILibrary.AssortedMethods;
 
 public class Solution3 {
-    private static boolean findElement(int[][] matrix, int elem) {
-        Coordinate coordinate = dioganalBinarySearch(matrix, 0, matrix[0].length - 1, elem);
-        if (coordinate.elementFounded){
-            return true;
+    public static Coordinate partitionAndSearch(int[][] matrix, Coordinate origin, Coordinate dest, Coordinate pivot, int x) {
+        Coordinate lowerLeftOrigin = new Coordinate(pivot.row, origin.column);
+        Coordinate lowerLeftDest = new Coordinate(dest.row, pivot.column - 1);
+        Coordinate upperRightOrigin = new Coordinate(origin.row, pivot.column);
+        Coordinate upperRightDest = new Coordinate(pivot.row - 1, dest.column);
+
+        Coordinate lowerLeft = findElement(matrix, lowerLeftOrigin, lowerLeftDest, x);
+        if (lowerLeft == null) {
+            return findElement(matrix, upperRightOrigin, upperRightDest, x);
         }
-        int columnMin = coordinate.x +1;
-        int columnMax = matrix.length;
-        int maxy = coordinate.y;
-        return true;
+        return lowerLeft;
     }
 
-    private static Coordinate dioganalBinarySearch(int[][] matrix, int low, int high, int elem) {
-        if (low > high) {
-            return new Coordinate(high, high, false);
+    public static Coordinate findElement(int[][] matrix, Coordinate origin, Coordinate dest, int x) {
+        if (!origin.inbounds(matrix) || !dest.inbounds(matrix)) {
+            return null;
         }
-        int mid = low + (high - low) / 2;
+        if (matrix[origin.row][origin.column] == x) {
+            return origin;
+        } else if (!origin.isBefore(dest)) {
+            return null;
+        }
 
-        if (matrix[mid][mid] == elem) {
-            return new Coordinate(mid, mid, true);
+        /* Set start to start of diagonal and end to the end of the diagonal. Since
+         * the grid may not be square, the end of the diagonal may not equal dest.
+         */
+        Coordinate start = (Coordinate) origin.clone();
+        int diagDist = Math.min(dest.row - origin.row, dest.column - origin.column);
+        Coordinate end = new Coordinate(start.row + diagDist, start.column + diagDist);
+        Coordinate p = new Coordinate(0, 0);
+
+        /* Do binary search on the diagonal, looking for the first element greater than x */
+        while (start.isBefore(end)) {
+            p.setToAverage(start, end);
+            if (x > matrix[p.row][p.column]) {
+                start.row = p.row + 1;
+                start.column = p.column + 1;
+            } else {
+                end.row = p.row - 1;
+                end.column = p.column - 1;
+            }
         }
-        if (matrix[mid][mid] > elem) {
-            return dioganalBinarySearch(matrix, low, mid - 1, elem);
-        } else {
-            return dioganalBinarySearch(matrix, mid + 1, high, elem);
-        }
+
+        /* Split the grid into quadrants. Search the bottom left and the top right. */
+        return partitionAndSearch(matrix, origin, dest, start, x);
+    }
+
+    public static Coordinate findElement(int[][] matrix, int x) {
+        Coordinate origin = new Coordinate(0, 0);
+        Coordinate dest = new Coordinate(matrix.length - 1, matrix[0].length - 1);
+        return findElement(matrix, origin, dest, x);
     }
 
     public static void main(String[] args) {
-        int M = 4;
-        int N = 4;
-        int[][] matrix = new int[M][N];
-        int temp = 15;
-        int temp2 = 15;
-        for (int i = 0; i < M; i++) {
-            temp2 += 7;
-            for (int j = 0; j < N; j++) {
-                matrix[i][j] = temp;
-                temp += 5;
-            }
-            temp = temp2 + 10;
-        }
+        int[][] matrix = {{15, 30,  50,  70,  73},
+                {35, 40, 100, 102, 120},
+                {36, 42, 105, 110, 125},
+                {46, 51, 106, 111, 130},
+                {48, 55, 109, 140, 150}};
+
         AssortedMethods.printMatrix(matrix);
-        System.out.println(56 + ": " + findElement(matrix, 47));
-        for (int i = -1; i < M; i++) {
-            for (int j = -1; j < M; j++) {
-                int v = 10 * i + j;
-                System.out.println(v + ": " + findElement(matrix, v));
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        int count = 0;
+        int littleOverTheMax = matrix[m - 1][n - 1] + 10;
+        for (int i = 0; i < littleOverTheMax; i++) {
+            Coordinate c = findElement(matrix, i);
+            if (c != null) {
+                System.out.println(i + ": (" + c.row + ", " + c.column + ")");
+                count++;
             }
         }
+        System.out.println("Found " + count + " unique elements.");
     }
 
 }
+class Coordinate implements Cloneable {
+    public int row;
+    public int column;
+    public Coordinate(int r, int c) {
+        row = r;
+        column = c;
+    }
 
-class Coordinate {
-    int x;
-    int y;
-    boolean elementFounded = false;
+    public boolean inbounds(int[][] matrix) {
+        return 	row >= 0 &&
+                column >= 0 &&
+                row < matrix.length &&
+                column < matrix[0].length;
+    }
 
-    public Coordinate(int x, int y, boolean elementFounded) {
-        this.x = x;
-        this.y = y;
-        this.elementFounded = elementFounded;
+    public boolean isBefore(Coordinate p) {
+        return row <= p.row && column <= p.column;
+    }
+
+    public Object clone() {
+        return new Coordinate(row, column);
+    }
+
+    public void moveDownRight() {
+        row++;
+        column++;
+    }
+
+    public void setToAverage(Coordinate min, Coordinate max) {
+        row = (min.row + max.row) / 2;
+        column = (min.column + max.column) / 2;
     }
 }
