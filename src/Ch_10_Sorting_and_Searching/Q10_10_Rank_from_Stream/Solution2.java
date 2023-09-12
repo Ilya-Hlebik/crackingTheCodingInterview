@@ -2,12 +2,12 @@ package Ch_10_Sorting_and_Searching.Q10_10_Rank_from_Stream;
 
 import CtCILibrary.AssortedMethods;
 
-public class Solution {
-    private static RankNode root = null;
+public class Solution2 {
+    private static RankNode2 root = null;
 
     public static void track(int number) {
         if (root == null) {
-            root = new RankNode(number);
+            root = new RankNode2(number);
         } else {
             root.insert(number);
         }
@@ -44,51 +44,48 @@ public class Solution {
     }
 }
 
-class RankNode {
+class RankNode2 {
+    private int leftSize;
+    private final int number;
+    private RankNode2 left;
+    private RankNode2 right;
 
-    int number;
-    RankNode left;
-    RankNode right;
-
-    public RankNode(int number) {
+    public RankNode2(int number) {
         this.number = number;
     }
 
     public int getRank(int number) {
-        return getRank(this, number, -1);
-    }
-
-    private int getRank(RankNode rankNode, int number, int counter) {
-        if (rankNode == null) {
-            return counter;
+        if (this.number == number) {
+            return leftSize;
+        } else if (number < this.number) {
+            if (left == null) {
+                return -1;
+            } else {
+                return left.getRank(number);
+            }
+        } else {
+            int rightRank = right == null ? -1 : right.getRank(number);
+            if (rightRank == -1) {
+                return -1;
+            } else {
+                return leftSize + 1 + rightRank;
+            }
         }
-        counter = getRank(rankNode.left, number, counter);
-        if (rankNode.number <= number) {
-            counter++;
-        }
-
-        counter = getRank(rankNode.right, number, counter);
-
-        return counter;
     }
 
     public void insert(int number) {
-        RankNode current = this;
-        while (true) {
-            if (current.number > number) {
-                if (current.left != null) {
-                    current = current.left;
-                } else {
-                    current.left = new RankNode(number);
-                    break;
-                }
+        if (number <= this.number) {
+            if (left != null) {
+                left.insert(number);
             } else {
-                if (current.right != null) {
-                    current = current.right;
-                } else {
-                    current.right = new RankNode(number);
-                    break;
-                }
+                left = new RankNode2(number);
+            }
+            leftSize++;
+        } else {
+            if (right != null) {
+                right.insert(number);
+            } else {
+                right = new RankNode2(number);
             }
         }
     }
