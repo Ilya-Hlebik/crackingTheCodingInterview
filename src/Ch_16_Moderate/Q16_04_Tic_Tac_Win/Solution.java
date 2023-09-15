@@ -5,6 +5,7 @@ import CtCILibrary.AssortedMethods;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Solution {
     public static void main(String[] args) {
@@ -27,24 +28,24 @@ public class Solution {
     private static Piece hasWon(Piece[][] board) {
         List<Piece> horizontal = new ArrayList<>();
         List<Piece> vertical = new ArrayList<>();
-        List<Piece> mainDiaganal = new ArrayList<>();
-        List<Piece> secondDiaganal = new ArrayList<>();
+        List<Piece> mainDiagonal = new ArrayList<>();
+        List<Piece> secondDiagonal = new ArrayList<>();
 
         for (int i = 0; i < board.length; i++) {
-            mainDiaganal.add(board[i][i]);
-            secondDiaganal.add(board[i][board.length -1 -i]);
-            for (int j = 0, k = 0; j < board.length; j++, k += 3) {
+            mainDiagonal.add(board[i][i]);
+            secondDiagonal.add(board[i][board.length - 1 - i]);
+            for (int j = 0; j < board.length; j++) {
                 horizontal.add(board[i][j]);
                 vertical.add(board[j][i]);
             }
             horizontal.add(Piece.Empty);
             vertical.add(Piece.Empty);
         }
-        mainDiaganal.add(Piece.Empty);
-        secondDiaganal.add(Piece.Empty);
-        List<List<Piece>> fullList = List.of(horizontal, vertical, mainDiaganal, secondDiaganal);
+        mainDiagonal.add(Piece.Empty);
+        secondDiagonal.add(Piece.Empty);
+        List<List<Piece>> fullList = List.of(horizontal, vertical, mainDiagonal, secondDiagonal);
         for (List<Piece> pieces : fullList) {
-            Piece piece = analizeLine(pieces);
+            Piece piece = analiseLine(pieces, board.length);
             if (piece != Piece.Empty) {
                 return piece;
             }
@@ -52,12 +53,13 @@ public class Solution {
         return Piece.Empty;
     }
 
-    private static Piece analizeLine(List<Piece> line) {
+    private static Piece analiseLine(List<Piece> line, int boardSize) {
         String fullLine = line.stream()
                 .map(Enum::toString)
                 .collect(Collectors.joining());
-        String redLine = "RedRedRed";
-        String blueLine = "BlueBlueBlue";
+
+        String redLine = IntStream.range(0, boardSize).mapToObj(value -> Piece.Red.toString()).collect(Collectors.joining());
+        String blueLine = IntStream.range(0, boardSize).mapToObj(value -> Piece.Blue.toString()).collect(Collectors.joining());
         if (fullLine.contains(redLine)) {
             return Piece.Red;
         } else if (fullLine.contains(blueLine)) {
