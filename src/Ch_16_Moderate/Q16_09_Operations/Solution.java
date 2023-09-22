@@ -49,18 +49,14 @@ public class Solution {
         if (b == 1) {
             return positiveSign ? a : negate(a);
         }
-        int closest = 1;
-        for (int i = 1; i < a; i++) {
-            int temp = multiply(i, b);
-            if (temp > a) {
-                break;
-            }
-            if (abs(multiply(b, i)) > abs(multiply(b, closest))) {
-                closest = i;
-            }
+        int product = 0;
+        int x = 0;
+        while (product + b <= a) { /* don't go past a */
+            product += b;
+            x++;
         }
 
-        return positiveSign ? closest : negate(closest);
+        return positiveSign ? x : negate(x);
     }
 
     private static int multiply(int a, int b) {
