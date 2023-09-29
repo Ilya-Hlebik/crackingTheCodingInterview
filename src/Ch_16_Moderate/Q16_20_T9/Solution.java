@@ -27,10 +27,6 @@ public class Solution {
         for (String w : words) {
             System.out.println(w);
         }
-        ArrayList<String> words2 = getValidT9Words("123123", AssortedMethods.getWordListAsHashSet());
-        for (String w : words2) {
-            System.out.println(w);
-        }
     }
 
     private static ArrayList<String> getValidT9Words(String number, HashSet<String> wordListAsHashSet) {
