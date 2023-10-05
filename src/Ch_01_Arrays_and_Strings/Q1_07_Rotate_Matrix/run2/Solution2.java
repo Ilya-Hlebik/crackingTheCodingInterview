@@ -40,17 +40,16 @@ public class Solution2 {
 
     private static void rotate(int[][] matrix) {
         int lengthOfMatrix = matrix.length;
-        for (int layer = 0; layer < lengthOfMatrix/2; layer++) {
-            int first = layer;
-            for (int i = first; i <  matrix.length - layer; i++) {
+        for (int layer = 0; layer < lengthOfMatrix / 2; layer++) {
+            int last = lengthOfMatrix - 1 - layer;
+            for (int i = layer; i < last; i++) {
                 System.out.println();
-                 //int offset =  ;
-                int top = matrix[first][i];
-                matrix[first][i] = matrix[lengthOfMatrix-1][i];
-
-                matrix[first][lengthOfMatrix-1] = matrix[][];
-
-               // matrix[layer][j] = matrix[][j]
+                int offset = i - layer;
+                int top = matrix[layer][i];
+                matrix[layer][i] = matrix[last - offset][layer];
+                matrix[last - offset][layer] = matrix[last][last - offset];
+                matrix[last][last - offset] = matrix[i][last ];
+                matrix[i][last ]  = top;
             }
 
         }
