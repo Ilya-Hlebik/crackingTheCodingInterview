@@ -18,7 +18,7 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        int[][] matrix = randomMatrix(3, 3, 0, 9);
+        int[][] matrix = randomMatrix(4, 4, 0, 9);
         printMatrix(matrix);
         rotate(matrix);
         System.out.println();

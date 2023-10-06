@@ -6,7 +6,7 @@ public class Solution2 {
     public static void main(String[] args) {
         int[][] matrix = AssortedMethods.randomMatrix(4, 4, 0, 9);
         AssortedMethods.printMatrix(matrix);
-        rotate(matrix);
+        rotate2(matrix);
         System.out.println();
         AssortedMethods.printMatrix(matrix);
     }
@@ -43,15 +43,29 @@ public class Solution2 {
         for (int layer = 0; layer < lengthOfMatrix / 2; layer++) {
             int last = lengthOfMatrix - 1 - layer;
             for (int i = layer; i < last; i++) {
-                System.out.println();
                 int offset = i - layer;
                 int top = matrix[layer][i];
                 matrix[layer][i] = matrix[last - offset][layer];
                 matrix[last - offset][layer] = matrix[last][last - offset];
-                matrix[last][last - offset] = matrix[i][last ];
-                matrix[i][last ]  = top;
+                matrix[last][last - offset] = matrix[i][last];
+                matrix[i][last] = top;
             }
 
+        }
+    }
+
+    private static void rotate2(int[][] matrix) {
+        int lengthOfMatrix = matrix.length;
+        int[][] matrix_copy = new int[matrix.length][matrix.length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0, p = lengthOfMatrix - 1; j < matrix[i].length && p >= 0; j++, p--) {
+                matrix_copy[i][j] = matrix[p][i];
+            }
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                matrix[i][j] = matrix_copy[i][j];
+            }
         }
     }
 }
