@@ -53,6 +53,7 @@ class MyStack {
         int min = Math.min(item, min());
         StackNode t = new StackNode(item);
         t.min = min;
+        t.next = top;
         top = t;
 
     }
