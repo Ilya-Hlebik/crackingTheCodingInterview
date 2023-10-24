@@ -1,7 +1,8 @@
 package Ch_04_Trees_and_Graphs.Q4_07_Build_Order.run2;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
 
 public class Solution {
     public static void main(String[] args) {
@@ -39,17 +40,34 @@ public class Solution {
     }
 
     private static String[] buildOrderWrapper(String[] projects, String[][] dependencies) {
-        String result [] = new String[projects.length];
-        Queue<String> tobeResolved = new LinkedList<>();
-        for (String project: projects){
-            for (int i = 0; i < dependencies.length; i++) {
-                if(project.equals(dependencies[i][1])){
-                    tobeResolved.add(dependencies[i][0]);
-                    i=-1;
+        String[] result = new String[projects.length];
+        int index = 0;
+        Stack<String> tobeResolved = new Stack<>();
+        Set<String> resolvedProjects = new HashSet<>();
+        for (String project : projects) {
+            if (resolvedProjects.contains(project)) {
+                continue;
+            }
+            tobeResolved.add(project);
+            while (!tobeResolved.isEmpty()) {
+                String peek = tobeResolved.peek();
+                if (resolvedProjects.contains(peek)) {
+                    tobeResolved.pop();
+                    continue;
+                }
+                boolean wasResolved = true;
+                for (String[] dependency : dependencies) {
+                    if (peek.equals(dependency[1]) && !resolvedProjects.contains(dependency[0])) {
+                        wasResolved = false;
+                        tobeResolved.add(dependency[0]);
+                    }
+                }
+                if (wasResolved) {
+                    resolvedProjects.add(peek);
+                    result[index++] = tobeResolved.pop();
                 }
             }
-
         }
-        return new String[0];
+        return result;
     }
 }
