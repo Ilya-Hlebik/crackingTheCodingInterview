@@ -52,6 +52,3 @@ public class Solution {
     }
 }
 
-enum Color {
-    Black, White, Red, Yellow, Green
-}
