@@ -23,7 +23,7 @@ public class Solution {
         System.out.println(height1);
     }
 
-    private static int createStack(ArrayList<Box> boxes) {
+    public static int createStack(ArrayList<Box> boxes) {
         int maxHegth = 0;
         int[] memo = new int[boxes.size()];
         for (int i = 0; i < boxes.size(); i++) {
@@ -51,37 +51,6 @@ public class Solution {
 
     private static boolean checkIfPossiblePlace(Box smallerBox, Box biggerBox) {
         return biggerBox.getDepth() > smallerBox.getDepth() && biggerBox.getHeight() > smallerBox.getHeight() && biggerBox.getWidth() > smallerBox.getWidth();
-    }
-}
-
-class Box {
-    public int width;
-    public int height;
-    public int depth;
-
-    public Box(int w, int h, int d) {
-        width = w;
-        height = h;
-        depth = d;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getDepth() {
-        return depth;
-    }
-
-    public boolean canBeAbove(Box b) {
-        if (b == null) {
-            return true;
-        }
-        return width < b.width && height < b.height && depth < b.depth;
     }
 }
 
