@@ -15,7 +15,7 @@ public class Solution {
         }
     }
 
-    private static String printBinary2(double num) {
+    public static String printBinary2(double num) {
         if (num >= 1 || num <= 0) {
             return "ERROR";
         }
