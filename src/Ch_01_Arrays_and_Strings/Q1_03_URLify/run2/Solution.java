@@ -2,9 +2,9 @@ package Ch_01_Arrays_and_Strings.Q1_03_URLify.run2;
 
 public class Solution {
     public static void main(String[] args) {
-        String str = "Mr J ohn Smith      ";
+        String str = "Mr John Smith    ";
         char[] arr = str.toCharArray();
-        replaceSpaces(arr, 14);
+        replaceSpaces2(arr, 13);
         System.out.println(new String(arr));
     }
 
@@ -22,6 +22,7 @@ public class Solution {
                 arr[maxArrlength] = '0';
                 arr[maxArrlength-1] = '2';
                 arr[maxArrlength-2] = '%';
+                maxArrlength -=3;
             } else {
                 arr[maxArrlength] = arr[j];
                 maxArrlength--;
