@@ -6,6 +6,7 @@ import java.util.List;
 public class ParkingLot {
     private List<Level> levels;
     private final int NUM_LEVELS = 5;
+
     public ParkingLot() {
         levels = new ArrayList<>();
         for (int i = 0; i < NUM_LEVELS; i++) {
@@ -15,12 +16,13 @@ public class ParkingLot {
 
     public boolean parkVehicle(Vehicle vehicle) {
         for (Level level : levels) {
-            if (level.parkVehicle(vehicle)){
+            if (level.parkVehicle(vehicle)) {
                 return true;
             }
         }
         return false;
     }
+
     public void print() {
         for (int i = 0; i < levels.size(); i++) {
             System.out.print("Level" + i + ": ");

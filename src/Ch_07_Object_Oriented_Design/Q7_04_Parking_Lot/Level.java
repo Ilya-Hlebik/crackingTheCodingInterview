@@ -48,11 +48,8 @@ public class Level {
                     .filter(parkingSpot -> parkingSpot.getSpotSize() != VehicleSize.Moto)
                     .filter(ParkingSpot::isEmpty)
                     .min(Comparator.comparing(ParkingSpot::getSpotSize));
-            if (firstCompactPriority.isPresent()) {
-                assignCarToSpot(vehicle, firstCompactPriority.get());
-                return true;
-            }
             firstCompactPriority.ifPresent(parkingSpot -> assignCarToSpot(vehicle, parkingSpot));
+            return true;
         } else {
             for (List<ParkingSpot> parkingSpotList : parkingSpots) {
                 List<ParkingSpot> largeSpotList = new ArrayList<>();
@@ -63,12 +60,9 @@ public class Level {
                         largeSpotList.clear();
                     }
                     if (largeSpotList.size() == 5) {
-                        break;
+                        largeSpotList.forEach(parkingSpot -> assignCarToSpot(vehicle, parkingSpot));
+                        return true;
                     }
-                }
-                if (largeSpotList.size() == 5) {
-                    largeSpotList.forEach(parkingSpot -> assignCarToSpot(vehicle, parkingSpot));
-                    return true;
                 }
             }
         }
