@@ -25,7 +25,7 @@ public class Solution {
             Signature signature = Crawler.createSignature(page);
             List<Page> itemsCrawledBySignature = database.getItemsCrawledBySignature(signature);
             if (!itemsCrawledBySignature.isEmpty()){
-                database.updatePriority(page,"LOW");
+                database.insertPage(page,"LOW");
             }
             else {
                 Crawler.crawl(page, database);
@@ -75,6 +75,10 @@ class Database {
     }
 
     public void insertPage(List<String> page) {
+
+    }
+
+    public void insertPage(Page page, String priority) {
 
     }
 }
