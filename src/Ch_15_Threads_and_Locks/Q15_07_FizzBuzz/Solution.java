@@ -1,13 +1,16 @@
 package Ch_15_Threads_and_Locks.Q15_07_FizzBuzz;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 public class Solution {
     public static void main(String[] args) {
         FizzBuzz fizzBuzz = new FizzBuzz();
         int maxNumber = 100;
-        MyRunnableDivisionBy3 myRunnable1 = new MyRunnableDivisionBy3(fizzBuzz, maxNumber);
-        MyRunnableDivisionBy5 myRunnable2 = new MyRunnableDivisionBy5(fizzBuzz, maxNumber);
-        MyRunnableDivisionBy3And5 myRunnable3 = new MyRunnableDivisionBy3And5(fizzBuzz, maxNumber);
-        MyRunnableDivisionNumbers myRunnable4 = new MyRunnableDivisionNumbers(fizzBuzz, maxNumber);
+        DivisionNumbers myRunnable1 = new DivisionNumbers(maxNumber, current -> fizzBuzz.checkDivisionBy3(current) && !fizzBuzz.checkDivisionBy5(current), current -> current + " Fizz");
+        DivisionNumbers myRunnable2 = new DivisionNumbers(maxNumber, current -> fizzBuzz.checkDivisionBy5(current) && !fizzBuzz.checkDivisionBy3(current), current -> current + " Buzz");
+        DivisionNumbers myRunnable3 = new DivisionNumbers(maxNumber, current -> fizzBuzz.checkDivisionBy3(current) && fizzBuzz.checkDivisionBy5(current), current -> current + " FizzBuzz");
+        DivisionNumbers myRunnable4 = new DivisionNumbers(maxNumber, current -> !fizzBuzz.checkDivisionBy3(current) && !fizzBuzz.checkDivisionBy5(current), String::valueOf);
 
         Thread thread1 = new Thread(myRunnable1);
         Thread thread2 = new Thread(myRunnable2);
@@ -31,86 +34,31 @@ class FizzBuzz {
     }
 }
 
-class MyRunnableDivisionBy3 implements Runnable {
-    private final FizzBuzz fizzBuzz;
+class DivisionNumbers implements Runnable {
     private final int number;
+    private final Predicate<Integer> function;
+    private final Function<String, String> functionPrint;
+    private static int current = 1;
 
-    public MyRunnableDivisionBy3(FizzBuzz fizzBuzz, int number) {
-        this.fizzBuzz = fizzBuzz;
+    protected DivisionNumbers(int number, Predicate<Integer> predicate, Function<String, String> functionPrint) {
         this.number = number;
+        this.function = predicate;
+        this.functionPrint = functionPrint;
     }
 
     @Override
     public void run() {
-        int current = 1;
-        while (current <= number) {
-            if (fizzBuzz.checkDivisionBy3(current) && !fizzBuzz.checkDivisionBy5(current)) {
-                System.out.println(current + " Fizz");
+        while (true) {
+            synchronized (DivisionNumbers.class) {
+                if (current > number) {
+                    return;
+                }
+                if (function.test(current)) {
+                    System.out.println(functionPrint.apply(String.valueOf(current)));
+                    current++;
+                }
+
             }
-            current++;
-        }
-    }
-}
-
-class MyRunnableDivisionBy5 implements Runnable {
-    private final FizzBuzz fizzBuzz;
-    private final int number;
-
-    public MyRunnableDivisionBy5(FizzBuzz fizzBuzz, int number) {
-        this.fizzBuzz = fizzBuzz;
-        this.number = number;
-    }
-
-    @Override
-    public void run() {
-        int current = 1;
-        while (current <= number) {
-            if (fizzBuzz.checkDivisionBy5(current) && !fizzBuzz.checkDivisionBy3(current)) {
-                System.out.println(current + " Buzz");
-            }
-            current++;
-        }
-    }
-}
-
-class MyRunnableDivisionBy3And5 implements Runnable {
-    private final FizzBuzz fizzBuzz;
-    private final int number;
-
-    public MyRunnableDivisionBy3And5(FizzBuzz fizzBuzz, int number) {
-        this.fizzBuzz = fizzBuzz;
-        this.number = number;
-    }
-
-    @Override
-    public void run() {
-        int current = 1;
-        while (current <= number) {
-            if (fizzBuzz.checkDivisionBy3(current) && fizzBuzz.checkDivisionBy5(current)) {
-                System.out.println(current + " FizzBuzz");
-            }
-            current++;
-        }
-    }
-}
-
-class MyRunnableDivisionNumbers implements Runnable {
-    private final FizzBuzz fizzBuzz;
-    private final int number;
-
-    public MyRunnableDivisionNumbers(FizzBuzz fizzBuzz, int number) {
-        this.fizzBuzz = fizzBuzz;
-        this.number = number;
-    }
-
-    @Override
-    public void run() {
-        int current = 1;
-        while (current <= number) {
-            if (!fizzBuzz.checkDivisionBy3(current) && !fizzBuzz.checkDivisionBy5(current)) {
-                System.out.println(current);
-            }
-            current++;
         }
     }
 }
