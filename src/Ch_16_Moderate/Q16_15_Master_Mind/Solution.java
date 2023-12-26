@@ -35,18 +35,3 @@ public class Solution {
         return new Result(hits, pseudoHits);
     }
 }
-
-class Result {
-    public int hits;
-    public int pseudoHits;
-
-    public Result(int h, int p) {
-        hits = h;
-        pseudoHits = p;
-    }
-
-    @Override
-    public String toString() {
-        return "Result [hits=" + hits + ", pseudoHits=" + pseudoHits + "]";
-    }
-}
