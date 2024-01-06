@@ -14,14 +14,10 @@ public class Solution2 {
 
         int size = value.length();
         char mainChar = pattern.charAt(0);
-        int altChar = mainChar == 'a' ? 'b' : 'a';
         int countOfMain = getCountOfMain(pattern, mainChar);
         int countOfAlt = pattern.length() - countOfMain;
-        int firstAlt = pattern.indexOf(altChar);
-
 
         for (int mainSize = 0; mainSize < size / countOfMain; mainSize++) {
-
             String main = value.substring(0, mainSize);
             int altSizeFull = (size - (mainSize * countOfMain));
             if (countOfAlt == 0 || altSizeFull % countOfAlt == 0) {
