@@ -6,10 +6,7 @@ import java.util.Set;
 
 public class Solution {
     public static void main(String[] args) {
-
-        for (int i = 0; i < 1; i++) {
-            printKmoves(15);
-        }
+        printKmoves(1000);
     }
 
     private static void printKmoves(int k) {
@@ -39,26 +36,18 @@ public class Solution {
             maxRow = Math.max(maxRow, currentRow);
             maxColumn = Math.max(maxColumn, currentColumn);
         }
-        if (minRow < 0) {
-            maxRow += -minRow;
-        }
-        if (minColumn < 0) {
-            maxColumn += -minColumn;
-        }
         printBoard(minRow, minColumn, maxRow, maxColumn, points);
         System.out.println();
     }
 
     private static void printBoard(int minRow, int minColumn, int maxRow, int maxColumn, Set<Point> points) {
-        String[][] board = new String[maxRow + 1][maxColumn + 1];
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                if (points.contains(new Point(i + minRow, j + minColumn))) {
-                    board[i][j] = "X";
+        for (int i = minRow; i <= maxRow; i++) {
+            for (int j = minColumn; j <= maxColumn; j++) {
+                if (points.contains(new Point(i , j ))) {
+                    System.out.print("X");
                 } else {
-                    board[i][j] = "_";
+                    System.out.print("_");
                 }
-                System.out.print(board[i][j]);
             }
             System.out.println();
         }
@@ -80,36 +69,6 @@ public class Solution {
             return -1;
         }
         return 0;
-    }
-}
-
-enum Direction {
-    UP, DOWN, LEFT, RIGHT;
-
-    public Direction moveClockWise() {
-        switch (this) {
-            case UP:
-                return RIGHT;
-            case RIGHT:
-                return DOWN;
-            case DOWN:
-                return LEFT;
-            default:
-                return UP;
-        }
-    }
-
-    public Direction moveCounterClockWise() {
-        switch (this) {
-            case UP:
-                return LEFT;
-            case LEFT:
-                return DOWN;
-            case DOWN:
-                return RIGHT;
-            default:
-                return UP;
-        }
     }
 }
 
