@@ -1,5 +1,6 @@
-package Ch_16_Moderate.Q16_24_Pairs_With_Sum;
+package Ch_16_Moderate.Q16_24_Pairs_With_Sum.run2;
 
+import Ch_16_Moderate.Q16_24_Pairs_With_Sum.Pair;
 import CtCILibrary.AssortedMethods;
 
 import java.util.ArrayList;
@@ -21,26 +22,25 @@ public class Solution {
         System.out.println();
     }
 
-    private static ArrayList<Pair> printPairSums(int[] array, int sum) {
-        ArrayList<Pair> pairs = new ArrayList<>();
-        Map<Integer, Integer> numberMap = new HashMap<>();
-        for (int value : array) {
-            int searchValue = sum - value;
-            if (numberMap.getOrDefault(searchValue, 0) > 0) {
-                pairs.add(new Pair(value, searchValue));
-                numberMap.put(searchValue, numberMap.getOrDefault(searchValue, 0) - 1);
-            } else {
-                numberMap.put(value, numberMap.getOrDefault(value, 0) + 1);
-            }
-        }
-        return pairs;
-    }
-
     public static void print(ArrayList<Pair> pairs) {
         for (Pair p : pairs) {
             System.out.print(p.toString() + ", ");
         }
         System.out.println();
     }
-}
 
+    private static ArrayList<Pair> printPairSums(int[] array, int sum) {
+        ArrayList<Pair> pairs = new ArrayList<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i : array) {
+            if (map.getOrDefault(sum - i, 0) > 0) {
+                pairs.add(new Pair(i, sum - i));
+                map.put(sum - i, map.get(sum - i) - 1);
+            } else {
+                map.put(i, map.getOrDefault(i, 0) + 1);
+            }
+        }
+        return pairs;
+    }
+
+}
