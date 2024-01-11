@@ -9,13 +9,31 @@ public class Solution2 {
     public static void main(String[] args) {
         SortedMap<String, String> map = new TreeMap<>();
         Solution2 solution = new Solution2();
-        solution.initCache(3);
+        solution.initCache(5);
         solution.putItem(1, "1");
+        System.out.println(solution.getCacheAsString());
         solution.putItem(2, "2");
+        System.out.println(solution.getCacheAsString());
         solution.putItem(3, "3");
+        System.out.println(solution.getCacheAsString());
         solution.findItem(1);
+        System.out.println(solution.getCacheAsString());
         solution.putItem(4, "4");
-        System.out.println();
+        System.out.println(solution.getCacheAsString());
+        solution.findItem(2);
+        System.out.println(solution.getCacheAsString());
+        solution.putItem(5, "5");
+        System.out.println(solution.getCacheAsString());
+        solution.findItem(5);
+        System.out.println(solution.getCacheAsString());
+        solution.putItem(6,  "6");
+        System.out.println(solution.getCacheAsString());
+        solution.findItem(1);
+        System.out.println(solution.getCacheAsString());
+        solution.putItem(5, "5a");
+        System.out.println(solution.getCacheAsString());
+        solution.findItem(3);
+        System.out.println(solution.getCacheAsString());
     }
 
     int capacity;
@@ -88,6 +106,10 @@ public class Solution2 {
         }
         return item.value;
     }
+    public String getCacheAsString() {
+        if (head == null) return "";
+        return head.printForward();
+    }
 }
 
 class LinkedListNode {
@@ -98,5 +120,13 @@ class LinkedListNode {
     public LinkedListNode(int key, String value) {
         this.key = key;
         this.value = value;
+    }
+    public String printForward() {
+        String data = "(" + key + "," + value + ")";
+        if (next != null) {
+            return data + "->" + next.printForward();
+        } else {
+            return data;
+        }
     }
 }
