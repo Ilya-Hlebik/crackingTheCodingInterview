@@ -35,6 +35,7 @@ public class Solution {
         cache.getValue(3);
         System.out.println(cache.getCacheAsString());
         // 6->5->2->4->1
+        //5 1 6 2 4
     }
 }
 
@@ -49,12 +50,14 @@ class Cache {
 
     public void setKeyValue(int key, String value) {
         if (keys.containsKey(key)) {
-            Pair integerStringEntry = keys.get(key);
-            integerStringEntry.setValue(value);
+            Pair pair = keys.get(key);
+            pair.setValue(value);
+            linkedList.remove(pair);
+            linkedList.addFirst(pair);
         } else {
             evictLeastElementIfNeeded();
             Pair pair = new Pair(key, value);
-            linkedList.add(pair);
+            linkedList.addFirst(pair);
             keys.put(key, pair);
         }
     }
